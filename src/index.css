@@ -1,0 +1,41 @@
+@font-face {
+  font-family: 'OverpassMono';
+  src: url(./fonts/OverpassMono-Regular.ttf);
+  font-weight: 400, normal;
+}
+
+@font-face {
+  font-family: 'OverpassMono';
+  src: url(./fonts/OverpassMono-Bold.ttf);
+  font-weight: 700;
+}
+
+* {
+  font-family: OverpassMono, sans-serif !important;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+}
