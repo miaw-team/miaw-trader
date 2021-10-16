@@ -81,9 +81,9 @@ const Main = (): ReactElement => {
           <StyledDesc>
             {'- 15% LP Staking reward. 5years, 5M>4M>3M>2M>1M'}
           </StyledDesc>
-          <StyledDesc>{'- 17% Community funds ( 9% now )'}</StyledDesc>
+          <StyledDesc>{'- 8% Community funds'}</StyledDesc>
           <StyledDesc>{'- 4% Lp Supply'}</StyledDesc>
-          <StyledDesc>{'- 4% Team'}</StyledDesc>
+          <StyledDesc>{'- 3% Team'}</StyledDesc>
           <StyledDesc>{'- 70% burned'}</StyledDesc>
         </StyledSection>
 
