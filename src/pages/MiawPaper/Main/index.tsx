@@ -8,6 +8,7 @@ import { toast } from 'react-toastify'
 import { STYLE, WHITELIST, COLOR } from 'consts'
 
 import { View, Card, FormText, LinkA } from 'components'
+import { IconSquare, IconSquareCheck, IconSquarePlus } from '@tabler/icons'
 
 const StyledContainer = styled(View)`
   ${STYLE.setMediaWidth()}
@@ -29,6 +30,8 @@ const StyledMainTitle = styled(FormText)``
 
 const StyledSubTitle = styled(FormText)``
 const StyledDesc = styled(FormText)`
+  flex-direction: row;
+  align-items: center;
   white-space: pre-wrap;
   word-break: break-all;
   background-color: ${COLOR.white};
@@ -68,7 +71,67 @@ const Main = (): ReactElement => {
             - Token,Lp,Pair contracts are based on The Terraswap factory
           </StyledDesc>
           <StyledDesc>- MIAW was made by a dev who loves the Terra</StyledDesc>
-          <StyledDesc>- Rewriting for the next features</StyledDesc>
+        </StyledSection>
+
+        <StyledSection>
+          <StyledSubTitle fontType="B24">
+            Token Distribution plan for MIAW V1
+          </StyledSubTitle>
+          <StyledDesc fontType="B20">100M Total supply</StyledDesc>
+          <StyledDesc>
+            {'- 15% LP Staking reward. 5years, 5M>4M>3M>2M>1M'}
+          </StyledDesc>
+          <StyledDesc>{'- 17% Community funds ( 9% now )'}</StyledDesc>
+          <StyledDesc>{'- 4% Lp Supply'}</StyledDesc>
+          <StyledDesc>{'- 4% Team'}</StyledDesc>
+          <StyledDesc>{'- 70% burned'}</StyledDesc>
+        </StyledSection>
+
+        <StyledSection>
+          <StyledSubTitle fontType="B24">Roadmap for MIAW V1</StyledSubTitle>
+          <StyledDesc>
+            <IconSquareCheck color={COLOR.primary._600} /> SayMiaw
+          </StyledDesc>
+          <StyledDesc>
+            <IconSquareCheck color={COLOR.primary._600} /> LpTower
+          </StyledDesc>
+          <StyledDesc>
+            <IconSquareCheck color={COLOR.primary._600} /> LpStaking
+          </StyledDesc>
+          <StyledDesc>
+            <IconSquareCheck color={COLOR.primary._600} /> Impermanent gain/loss
+            chart
+          </StyledDesc>
+          <StyledDesc>
+            <IconSquarePlus color={COLOR.success} /> Miawaifu NFT
+          </StyledDesc>
+          <StyledDesc>
+            <IconSquarePlus color={COLOR.success} /> NFT Trader
+          </StyledDesc>
+          <StyledDesc>
+            <IconSquare color={COLOR.gray._900} /> Any interesting ideas{' '}
+          </StyledDesc>
+        </StyledSection>
+
+        <StyledSection>
+          <StyledSubTitle fontType="B24">Keeping token prices</StyledSubTitle>
+          <StyledDesc fontType="B18">1. SayMiaw</StyledDesc>
+          <StyledDesc>
+            {'-> Burn MIAW through SayMiaw with various events'}
+          </StyledDesc>
+          <StyledDesc fontType="B18">2. Miawaifu NFT</StyledDesc>
+          <StyledDesc>{'-> Supply lp with Miawaifu sales proceeds'}</StyledDesc>
+          <StyledDesc fontType="B18">3. NFT Trader</StyledDesc>
+          <StyledDesc>{'-> Burn MIAW to upload nft'}</StyledDesc>
+          <StyledDesc>{'-> Supply lp with nft trading fee'}</StyledDesc>
+        </StyledSection>
+
+        <StyledSection>
+          <StyledSubTitle fontType="B24">MIAW V2?</StyledSubTitle>
+          <StyledDesc>
+            - Supporting token swap independently without the Terraswap
+          </StyledDesc>
+          <StyledDesc>- who knows?</StyledDesc>
         </StyledSection>
 
         <StyledSection>
