@@ -41,6 +41,7 @@ import SPECLogo from 'images/whitelist/SPEC.png'
 //import ALTELogo from 'images/whitelist/ALTE.png'
 import TWDLogo from 'images/whitelist/TWD.png'
 import STTLogo from 'images/whitelist/STT.png'
+import VKRLogo from 'images/whitelist/VKR.png'
 
 import { ContractAddr, TokenDenomEnum } from 'types'
 
@@ -394,6 +395,15 @@ const mainnetTokenList: TokenType<ContractAddr | TokenDenomEnum>[] = [
       'terra1s5eczhe0h0jutf46re52x5z4r03c8hupacxmdr' as ContractAddr,
     lp_ust: 'terra1y9kxxm97vu4ex3uy0rgdr5h2vt7aze5sqx7jyl' as ContractAddr,
     pair_ust: 'terra1tn8ejzw8kpuc87nu42f6qeyen4c7qy35tl8t20' as ContractAddr,
+  },
+  {
+    symbol: 'VKR',
+    name: 'Valkyrie Token',
+    logo: VKRLogo,
+    contractOrDenom:
+      'terra1dy9kmlm4anr92e42mrkjwzyvfqwz66un00rwr5' as ContractAddr,
+    lp_ust: 'terra17fysmcl52xjrs8ldswhz7n6mt37r9cmpcguack' as ContractAddr,
+    pair_ust: 'terra1e59utusv5rspqsu8t37h5w887d9rdykljedxw0' as ContractAddr,
   },
   // {
   //   symbol: 'ALTE',
