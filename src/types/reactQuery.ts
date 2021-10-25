@@ -1,4 +1,5 @@
 export enum QueryKeyEnum {
+  GAS_PRICES = 'GAS_PRICES',
   FAVORITE_LIST = 'FAVORITE_LIST',
 
   ROUTE_PARAMS = 'ROUTE_PARAMS',

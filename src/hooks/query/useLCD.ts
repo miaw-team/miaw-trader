@@ -1,9 +1,11 @@
 import { useMemo } from 'react'
+import axios from 'axios'
 
 import { useWallet } from '@terra-money/wallet-provider'
 import { Coins, LCDClient, TxInfo } from '@terra-money/terra.js'
 
-import { ContractAddr } from 'types'
+import { ContractAddr, QueryKeyEnum } from 'types'
+import useReactQuery from 'hooks/common/useReactQuery'
 
 const useLCD = (): {
   lcd: LCDClient
@@ -16,9 +18,18 @@ const useLCD = (): {
   }) => Promise<Response>
 } => {
   const wallet = useWallet()
-  const gasPrices = {
-    uusd: '0.456',
-  }
+
+  const {
+    data: gasPrices = {
+      uusd: '0.15',
+    },
+  } = useReactQuery<{
+    [denom: string]: string
+  }>([QueryKeyEnum.GAS_PRICES], async () => {
+    const { data } = await axios.get('https://fcd.terra.dev/v1/txs/gas_prices')
+    return data
+  })
+
   const lcd = useMemo(
     () =>
       new LCDClient({
