@@ -5,7 +5,7 @@ import MIAWLogo from 'images/whitelist/MIAW.png'
 import LUNALogo from 'images/whitelist/LUNA.svg'
 import bLUNALogo from 'images/whitelist/bLUNA.png'
 import LOTALogo from 'images/whitelist/LOTA.png'
-import ARKKLogo from 'images/whitelist/ARKK.png'
+// import ARKKLogo from 'images/whitelist/ARKK.png'
 import bETHLogo from 'images/whitelist/bETH.png'
 import ANCLogo from 'images/whitelist/ANC.png'
 import MIRLogo from 'images/whitelist/MIR.svg'
@@ -90,15 +90,15 @@ const mainnetTokenList: TokenType<ContractAddr | TokenDenomEnum>[] = [
     pair_ust: 'terra19pg6d7rrndg4z4t0jhcd7z9nhl3p5ygqttxjll' as ContractAddr,
     lp_ust: 'terra1uwhf02zuaw7grj6gjs7pxt5vuwm79y87ct5p70' as ContractAddr,
   },
-  {
-    symbol: 'ARKK',
-    name: 'ARK Innovation ETF',
-    logo: ARKKLogo,
-    contractOrDenom:
-      'terra1qqfx5jph0rsmkur2zgzyqnfucra45rtjae5vh6' as ContractAddr,
-    lp_ust: 'terra1veqh8yc55mhw0ttjr5h6g9a6r9nylmrc0nzhr7' as ContractAddr,
-    pair_ust: 'terra1a5cc08jt5knh0yx64pg6dtym4c4l8t63rhlag3' as ContractAddr,
-  },
+  // {
+  //   symbol: 'ARKK',
+  //   name: 'ARK Innovation ETF',
+  //   logo: ARKKLogo,
+  //   contractOrDenom:
+  //     'terra1qqfx5jph0rsmkur2zgzyqnfucra45rtjae5vh6' as ContractAddr,
+  //   lp_ust: 'terra1veqh8yc55mhw0ttjr5h6g9a6r9nylmrc0nzhr7' as ContractAddr,
+  //   pair_ust: 'terra1a5cc08jt5knh0yx64pg6dtym4c4l8t63rhlag3' as ContractAddr,
+  // },
   {
     symbol: 'LOTA',
     name: 'loterra',
