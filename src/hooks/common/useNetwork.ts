@@ -17,10 +17,11 @@ const useNetwork = (): {
   whitelist: TokenType[]
   lpOfLpList: LpofLpType[]
   lpStakingList: LpStakingType[]
+  limitOrder: ContractAddr
   getSymbolByContractOrDenom: (
     contractOrDenom: ContractAddr | TokenDenomEnum
   ) => string
-  miawToken?: TokenType<ContractAddr>
+  miawToken: TokenType<ContractAddr>
   mantleApi: string
 } => {
   const { network } = useWallet()
@@ -55,6 +56,12 @@ const useNetwork = (): {
     [isMainnet]
   )
 
+  const limitOrder = useMemo(
+    () =>
+      isMainnet ? WHITELIST.mainnetLimitOrder : WHITELIST.testnetLimitOrder,
+    [isMainnet]
+  )
+
   const getSymbolByContractOrDenom = (
     contractOrDenom: ContractAddr | TokenDenomEnum
   ): string => {
@@ -70,13 +77,14 @@ const useNetwork = (): {
 
   const miawToken = whitelist.find(
     (x) => x.symbol === 'MIAW'
-  ) as TokenType<ContractAddr>
+  )! as TokenType<ContractAddr>
 
   return {
     isMainnet,
     whitelist,
     lpOfLpList,
     lpStakingList,
+    limitOrder,
     chainId: network.chainID,
     getSymbolByContractOrDenom,
     miawToken,

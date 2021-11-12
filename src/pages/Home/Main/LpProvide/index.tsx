@@ -1,7 +1,7 @@
 import { ReactElement } from 'react'
 import styled from 'styled-components'
 
-import { STYLE, COLOR, ASSET } from 'consts'
+import { COLOR, ASSET } from 'consts'
 
 import { AuthButton, Card, FormText, SelectTab } from 'components'
 import useRoute from 'hooks/common/useRoute'
@@ -22,8 +22,6 @@ import LpWithdrawForm from './LpWithdrawForm'
 
 const StyledCard = styled(Card)`
   flex: 1;
-  @media ${STYLE.media.tablet} {
-  }
 `
 
 const LpProvide = ({

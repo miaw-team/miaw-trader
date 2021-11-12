@@ -50,26 +50,46 @@ export const validateSlippage = ({
 }
 
 /**
- *
  * @returns error message
  */
 export const validateFormInputAmount = ({
-  max,
   input,
+  max,
+  min = '0' as Token,
 }: {
   input: Token
   max: Token
+  min?: Token
 }): string => {
   if (input) {
     if (toBn(max).isZero()) {
       return 'Insufficient balance'
     }
-    if (
-      toBn(input).isNaN() ||
-      toBn(input).isZero() ||
-      toBn(input).isGreaterThan(max)
-    ) {
-      return `Amount must be between 0 and ${max}`
+    if (toBn(input).isNaN() || toBn(input).lt(min) || toBn(input).gt(max)) {
+      return `Amount must be between ${min} and ${max}`
+    }
+
+    const decimalError = validateFormInputAmountDecimal({ input })
+    if (decimalError) {
+      return decimalError
+    }
+  }
+
+  return ''
+}
+/**
+ * @returns error message
+ */
+export const validateFormInputMinAmount = ({
+  input,
+  min = '0' as Token,
+}: {
+  input: Token
+  min: Token
+}): string => {
+  if (input) {
+    if (toBn(input).isNaN() || toBn(input).lt(min)) {
+      return `Amount must be bigger then ${min}`
     }
 
     const decimalError = validateFormInputAmountDecimal({ input })

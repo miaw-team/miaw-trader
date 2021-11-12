@@ -3,6 +3,10 @@ import { uToken } from '../currencies'
 import { ContractAddr } from './common'
 
 export namespace terraswap {
+  export type Asset = {
+    info: AssetInfo
+    amount: uToken
+  }
   export type TokenAssetInfo = { token: { contract_addr: ContractAddr } }
   export type NativeAssetInfo = { native_token: { denom: string } }
 

@@ -21,7 +21,7 @@ import TxInfo from './TxInfo'
 import Analytics from './Analytics'
 
 const StyledContainer = styled(View)`
-  ${STYLE.setMediaWidth('lg')}
+  max-width: 100%;
   @media ${STYLE.media.tablet} {
     padding: 0 20px;
   }
@@ -29,7 +29,7 @@ const StyledContainer = styled(View)`
 
 const StyledTradeBox = styled(View)`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 2fr 1fr;
   column-gap: 20px;
 
   @media ${STYLE.media.tablet} {
@@ -110,6 +110,7 @@ const Main = (): ReactElement => {
             borderRadius: 8,
             backgroundColor: COLOR.white,
             alignItems: 'center',
+            marginBottom: 10,
           }}
         >
           <IconList size={14} />

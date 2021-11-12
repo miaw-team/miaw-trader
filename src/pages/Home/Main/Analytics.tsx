@@ -140,9 +140,8 @@ const Analytics = ({
     token_1_ContractOrDenom,
     returnTokenType,
     setReturnTokenType,
-  } = useAnalytics({
-    pairContract,
-  })
+  } = useAnalytics({ pairContract })
+
   const token_0_Symbol =
     token_0_ContractOrDenom &&
     getSymbolByContractOrDenom(token_0_ContractOrDenom)

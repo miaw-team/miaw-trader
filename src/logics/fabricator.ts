@@ -1,6 +1,19 @@
 import { Coin, Coins, MsgExecuteContract } from '@terra-money/terra.js'
 import { UTIL } from 'consts'
-import { ContractAddr, LP, Token, TokenDenomEnum } from 'types'
+import { ContractAddr, LP, terraswap, Token, TokenDenomEnum } from 'types'
+
+const getAssetInfo = (
+  contractOrDenom: TokenDenomEnum | ContractAddr
+): terraswap.AssetInfo =>
+  UTIL.isNativeDenom(contractOrDenom)
+    ? {
+        native_token: {
+          denom: contractOrDenom as TokenDenomEnum,
+        },
+      }
+    : {
+        token: { contract_addr: contractOrDenom as ContractAddr },
+      }
 
 export type FabricateSwapOption = {
   fromAmount: Token
@@ -118,25 +131,9 @@ export const fabricateLpProvide = ({
     )
   }
 
-  const token_0_Info = token_0_IsNativeDenom
-    ? {
-        native_token: {
-          denom: token_0_ContractOrDenom as TokenDenomEnum,
-        },
-      }
-    : {
-        token: { contract_addr: token_0_ContractOrDenom as ContractAddr },
-      }
+  const token_0_Info = getAssetInfo(token_0_ContractOrDenom)
 
-  const token_1_Info = token_1_IsNativeDenom
-    ? {
-        native_token: {
-          denom: token_1_ContractOrDenom as TokenDenomEnum,
-        },
-      }
-    : {
-        token: { contract_addr: token_1_ContractOrDenom as ContractAddr },
-      }
+  const token_1_Info = getAssetInfo(token_1_ContractOrDenom)
 
   const coins = new Coins(coinList)
 
@@ -290,6 +287,96 @@ export const fabricateBurn = ({
   return [
     new MsgExecuteContract(sender, token, {
       burn: { amount: UTIL.microfy(amount) },
+    }),
+  ]
+}
+
+export type FabricateSubmitOrderOption = {
+  sender: ContractAddr
+  limitOrderContract: ContractAddr
+  offerAmount: Token
+  askAmount: Token
+  offerContractOrDenom: ContractAddr | TokenDenomEnum
+  askContractOrDenom: ContractAddr | TokenDenomEnum
+  feeContractOrDenom: ContractAddr | TokenDenomEnum
+  feeAmount: Token
+}
+
+export const fabricateSubmitOrder = ({
+  sender,
+  offerAmount,
+  askAmount,
+  limitOrderContract,
+  offerContractOrDenom,
+  askContractOrDenom,
+  feeContractOrDenom,
+  feeAmount,
+}: FabricateSubmitOrderOption): MsgExecuteContract[] => {
+  const offerIsNativeDenom = UTIL.isNativeDenom(offerContractOrDenom)
+
+  const coinList = []
+  const tokenAllowanceMsg = []
+
+  tokenAllowanceMsg.push(
+    new MsgExecuteContract(sender, feeContractOrDenom, {
+      increase_allowance: {
+        spender: limitOrderContract,
+        amount: UTIL.microfy(feeAmount),
+        expires: { never: {} },
+      },
+    })
+  )
+
+  if (offerIsNativeDenom) {
+    coinList.push(new Coin(offerContractOrDenom, UTIL.microfy(offerAmount)))
+  } else {
+    tokenAllowanceMsg.push(
+      new MsgExecuteContract(sender, offerContractOrDenom, {
+        increase_allowance: {
+          spender: limitOrderContract,
+          amount: UTIL.microfy(offerAmount),
+          expires: { never: {} },
+        },
+      })
+    )
+  }
+
+  const offerInfo = getAssetInfo(offerContractOrDenom)
+
+  const askInfo = getAssetInfo(askContractOrDenom)
+
+  const coins = new Coins(coinList)
+
+  return tokenAllowanceMsg.concat([
+    new MsgExecuteContract(
+      sender,
+      limitOrderContract,
+      {
+        submit_order: {
+          offer_asset: { info: offerInfo, amount: UTIL.microfy(offerAmount) },
+          ask_asset: { info: askInfo, amount: UTIL.microfy(askAmount) },
+          fee_amount: UTIL.microfy(feeAmount),
+        },
+      },
+      coins
+    ),
+  ])
+}
+
+export interface FabricateCancelOrderOption {
+  sender: ContractAddr
+  limitOrderContract: ContractAddr
+  orderId: number
+}
+
+export const fabricateCancelOrder = ({
+  sender,
+  limitOrderContract,
+  orderId,
+}: FabricateCancelOrderOption): MsgExecuteContract[] => {
+  return [
+    new MsgExecuteContract(sender, limitOrderContract, {
+      cancel_order: { order_id: orderId },
     }),
   ]
 }

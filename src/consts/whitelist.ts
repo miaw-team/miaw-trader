@@ -426,6 +426,15 @@ const testnetTokenList: TokenType[] = [
     pair_ust: 'terra1834ku9y7s2swyp2r090pc29c4s06hy9n9drwvy' as ContractAddr,
     lp_ust: 'terra18e4mudt7kdml6lma5fhsydszxpexmxf2ez9hpn' as ContractAddr,
   },
+  {
+    symbol: 'MIR',
+    name: 'MIR Token',
+    logo: MIRLogo,
+    contractOrDenom:
+      'terra10llyp6v3j3her8u3ce66ragytu45kcmd9asj3u' as ContractAddr,
+    pair_ust: 'terra1cz6qp8lfwht83fh9xm9n94kj04qc35ulga5dl0' as ContractAddr,
+    lp_ust: 'terra1zrryfhlrpg49quz37u90ck6f396l4xdjs5s08j' as ContractAddr,
+  },
 ]
 
 const mainnetLpOfLpList: LpofLpType[] = [
@@ -485,6 +494,11 @@ const address = {
   miawDeveloper: 'terra1mxwpyavs4v5rpwndh3uc90e3qaw2wqqndnmt3j',
 }
 
+const mainnetLimitOrder =
+  'terra18ntqa5t2nfmqadpn9skrvk373dsk7kdv4gdwf3' as ContractAddr
+const testnetLimitOrder =
+  'terra1a487xe70k8d7vpprm3mlqmql3fxyw9qa5jcpez' as ContractAddr
+
 export default {
   mainnetTokenList,
   testnetTokenList,
@@ -492,4 +506,6 @@ export default {
   mainnetLpStakingList,
   testnetLpStakingList,
   address,
+  mainnetLimitOrder,
+  testnetLimitOrder,
 }

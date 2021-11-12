@@ -15,6 +15,10 @@ import {
   FabricateLpStakeOption,
   FabricateLpUnStakeOption,
   FabricateLpRewardClaimOption,
+  fabricateSubmitOrder,
+  FabricateSubmitOrderOption,
+  fabricateCancelOrder,
+  FabricateCancelOrderOption,
 } from 'logics/fabricator'
 import { ContractAddr } from 'types'
 
@@ -36,6 +40,12 @@ const useFabricator = (): {
   ) => MsgExecuteContract[]
   getLpRewardClaimMsgs: (
     props: Omit<FabricateLpRewardClaimOption, 'sender'>
+  ) => MsgExecuteContract[]
+  getSubmitOrderMsgs: (
+    props: Omit<FabricateSubmitOrderOption, 'sender'>
+  ) => MsgExecuteContract[]
+  getCancelOrderMsgs: (
+    props: Omit<FabricateCancelOrderOption, 'sender'>
   ) => MsgExecuteContract[]
 } => {
   const connectedWallet = useConnectedWallet()
@@ -87,6 +97,23 @@ const useFabricator = (): {
     [sender]
   )
 
+  const getSubmitOrderMsgs = useCallback(
+    (
+      props: Omit<FabricateSubmitOrderOption, 'sender'>
+    ): MsgExecuteContract[] => {
+      return sender ? fabricateSubmitOrder({ ...props, sender }) : []
+    },
+    [sender]
+  )
+
+  const getCancelOrderMsgs = useCallback(
+    (
+      props: Omit<FabricateCancelOrderOption, 'sender'>
+    ): MsgExecuteContract[] => {
+      return sender ? fabricateCancelOrder({ ...props, sender }) : []
+    },
+    [sender]
+  )
   return {
     getSwapMsgs,
     getLpProvideMsgs,
@@ -94,6 +121,8 @@ const useFabricator = (): {
     getLpStakeMsgs,
     getLpUnStakeMsgs,
     getLpRewardClaimMsgs,
+    getSubmitOrderMsgs,
+    getCancelOrderMsgs,
   }
 }
 
