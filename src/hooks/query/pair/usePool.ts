@@ -12,7 +12,7 @@ import useReactQuery from 'hooks/common/useReactQuery'
 import { ExtractPoolResponseType, poolResponseParser } from 'logics/pool'
 
 export type UsePoolReturn = {
-  pollInfo: ExtractPoolResponseType
+  poolInfo: ExtractPoolResponseType
   refetch: () => void
 }
 
@@ -40,12 +40,12 @@ const usePool = ({
     }
   )
 
-  const pollInfo = useMemo(
+  const poolInfo = useMemo(
     () => poolResponseParser({ data, token_0_ContractOrDenom }),
     [data]
   )
 
-  return { pollInfo, refetch }
+  return { poolInfo, refetch }
 }
 
 export default usePool

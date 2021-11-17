@@ -24,7 +24,7 @@ export type SortedTokenType = {
     changePercent: string
   }
   token: TokenType
-  pollByUstInfo: ExtractPoolByUstResponseType
+  poolByUstInfo: ExtractPoolByUstResponseType
 }
 
 export type UseTokenListReturn = {
@@ -56,17 +56,17 @@ const useTokenList = (): UseTokenListReturn => {
     return whitelist
   }, [filter])
 
-  const { pollInfoList, refetch } = usePoolList({
+  const { poolInfoList, refetch } = usePoolList({
     tokenList: filteredList,
   })
 
   const { historicalTokenPrice } = useHistoricalDataForList({
-    tokenList: _.map(pollInfoList, (item) => item.token),
+    tokenList: _.map(poolInfoList, (item) => item.token),
   })
 
-  const pollInfoListWithHistory = useMemo(() => {
+  const poolInfoListWithHistory = useMemo(() => {
     if (false === isMainnet || historicalTokenPrice.length > 0) {
-      return _.map(pollInfoList, (x) => {
+      return _.map(poolInfoList, (x) => {
         const symbol = x.token.symbol
         const history = historicalTokenPrice.find((x) => x.symbol === symbol)
 
@@ -78,17 +78,17 @@ const useTokenList = (): UseTokenListReturn => {
 
   const sortedList = useMemo(() => {
     if (sortBy === SortTypeEnum.name) {
-      return pollInfoListWithHistory.sort((a, b) => {
+      return poolInfoListWithHistory.sort((a, b) => {
         if (a.token.symbol > b.token.symbol) {
           return sortDesc ? -1 : 1
         }
         return sortDesc ? 1 : -1
       })
     } else if (sortBy === SortTypeEnum.price) {
-      return pollInfoListWithHistory.sort((a, b) => {
+      return poolInfoListWithHistory.sort((a, b) => {
         if (
-          UTIL.toBn(a.pollByUstInfo.ustPricePerToken).gt(
-            b.pollByUstInfo.ustPricePerToken
+          UTIL.toBn(a.poolByUstInfo.ustPricePerToken).gt(
+            b.poolByUstInfo.ustPricePerToken
           )
         ) {
           return sortDesc ? -1 : 1
@@ -96,16 +96,16 @@ const useTokenList = (): UseTokenListReturn => {
         return sortDesc ? 1 : -1
       })
     } else if (sortBy === SortTypeEnum.poolSize) {
-      return pollInfoListWithHistory.sort((a, b) => {
+      return poolInfoListWithHistory.sort((a, b) => {
         if (
-          UTIL.toBn(a.pollByUstInfo.ustPoolSize).gt(b.pollByUstInfo.ustPoolSize)
+          UTIL.toBn(a.poolByUstInfo.ustPoolSize).gt(b.poolByUstInfo.ustPoolSize)
         ) {
           return sortDesc ? -1 : 1
         }
         return sortDesc ? 1 : -1
       })
     } else if (sortBy === SortTypeEnum.change) {
-      return pollInfoListWithHistory.sort((a, b) => {
+      return poolInfoListWithHistory.sort((a, b) => {
         const aIsPositive = a.history?.isIncreased
         const aVal = a.history?.changePercent || '0'
         const aBn = UTIL.toBn(aIsPositive ? aVal : `-${aVal}`)
@@ -121,7 +121,7 @@ const useTokenList = (): UseTokenListReturn => {
       })
     }
     return []
-  }, [pollInfoListWithHistory, sortBy, sortDesc])
+  }, [poolInfoListWithHistory, sortBy, sortDesc])
 
   const onClickSort = (value: SortTypeEnum): void => {
     setSortDesc(!sortDesc)

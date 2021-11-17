@@ -58,19 +58,19 @@ const StyledConvertedBalBox = styled(Row)`
 `
 
 const ConvertedValue = ({
-  pollInfo,
+  poolInfo,
   lpToken,
   tokenSymbol,
   denomSymbol,
 }: {
-  pollInfo: ExtractPoolResponseType
+  poolInfo: ExtractPoolResponseType
   lpToken: uToken
   tokenSymbol: string
   denomSymbol: string
 }): ReactElement => {
   const { token_0_Amount = '0' as Token, token_1_Amount = '0' as Token } =
     LpLpSimulation({
-      pollInfo,
+      poolInfo,
       ulp: lpToken as uLP,
       userLpBalance: lpToken as uLP,
     })
@@ -99,7 +99,7 @@ const LpStakingItem = ({
 }): ReactElement => {
   const { push } = useRoute()
   const { isMobileWidth } = useLayout()
-  const { apr, totalLpStaked, pollInfo } = useLpStakingInfo({
+  const { apr, totalLpStaked, poolInfo } = useLpStakingInfo({
     selectedLpStaking: item,
   })
   const { getTokenBalance } = useMyBalance()
@@ -163,7 +163,7 @@ const LpStakingItem = ({
         <ConvertedValue
           denomSymbol={denomSymbol}
           tokenSymbol={tokenSymbol}
-          pollInfo={pollInfo}
+          poolInfo={poolInfo}
           lpToken={myLpBalance}
         />
         <FormText fontType="B20" style={{ paddingLeft: 5 }}>
@@ -172,7 +172,7 @@ const LpStakingItem = ({
         <ConvertedValue
           denomSymbol={denomSymbol}
           tokenSymbol={tokenSymbol}
-          pollInfo={pollInfo}
+          poolInfo={poolInfo}
           lpToken={myLpStakedBalance}
         />
 

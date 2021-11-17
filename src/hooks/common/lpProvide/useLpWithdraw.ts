@@ -68,7 +68,7 @@ const useLpWithdraw = ({
 
   const { getLpWithdrawMsgs } = useFabricator()
   const connectedWallet = useConnectedWallet()
-  const { pollInfo, refetch: refetchPool } = usePool({
+  const { poolInfo, refetch: refetchPool } = usePool({
     pairContract,
     token_0_ContractOrDenom,
   })
@@ -133,7 +133,7 @@ const useLpWithdraw = ({
   const dbcSimulateLpTokenAmount = useDebouncedCallback(
     async (nextUlpTokenAmount: uLP) => {
       const simulation = await LpLpSimulation({
-        pollInfo,
+        poolInfo,
         ulp: nextUlpTokenAmount,
         userLpBalance: getTokenBalance(lpContract) as uLP,
       })

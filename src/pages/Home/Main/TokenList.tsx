@@ -54,8 +54,8 @@ const TokenItem = ({
   item: SortedTokenType
   closeModal?: () => void
 }): ReactElement => {
-  const { token, pollByUstInfo } = item
-  const { tokenPricePerUst, ustPricePerToken, ustPoolSize } = pollByUstInfo
+  const { token, poolByUstInfo } = item
+  const { tokenPricePerUst, ustPricePerToken, ustPoolSize } = poolByUstInfo
   const { insertRouteParam } = useRoute<RoutePath.home>()
 
   const { addFavoriteList, removeFavoriteList, favoriteList } =

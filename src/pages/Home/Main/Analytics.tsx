@@ -97,14 +97,14 @@ const SimulateLpAmount = ({
   token_0_Symbol?: string
   token_1_Symbol?: string
 }): ReactElement => {
-  const { pollInfo } = usePool({
+  const { poolInfo } = usePool({
     pairContract,
     token_0_ContractOrDenom,
   })
 
   const { token_0_Amount = '0' as Token, token_1_Amount = '0' as Token } =
     LpLpSimulation({
-      pollInfo,
+      poolInfo,
       ulp: inputLp as uLP,
       userLpBalance: inputLp as uLP,
     })

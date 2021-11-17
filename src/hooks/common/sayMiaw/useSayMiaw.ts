@@ -166,7 +166,7 @@ const useSayMiaw = ({
   const { tokenInfo } = useCw20Info({ token: miawToken.contractOrDenom })
   const myBalance = useMyBalance()
 
-  const { pollInfo } = usePool({
+  const { poolInfo } = usePool({
     pairContract: miawToken.pair_ust,
     token_0_ContractOrDenom: miawToken.contractOrDenom,
   })
@@ -178,9 +178,9 @@ const useSayMiaw = ({
   }, [tokenInfo?.total_supply])
 
   const burnedPrice = useMemo(() => {
-    const price = UTIL.toBn(burnedAmount).multipliedBy(pollInfo.token_0_Price)
+    const price = UTIL.toBn(burnedAmount).multipliedBy(poolInfo.token_0_Price)
     return price.toString(10) as uCW20
-  }, [burnedAmount, pollInfo.token_0_Price])
+  }, [burnedAmount, poolInfo.token_0_Price])
 
   const [burnOption, setBurnOption] = useState<SayOptionEnum>(
     memoOptions[0].value

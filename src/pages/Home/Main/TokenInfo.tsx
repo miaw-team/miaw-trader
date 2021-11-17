@@ -57,12 +57,12 @@ const TokenPrice = ({
 }): ReactElement => {
   const { history } = selectedToken
 
-  const { pollInfo } = usePool({
+  const { poolInfo } = usePool({
     pairContract,
     token_0_ContractOrDenom: selectedToken.token.contractOrDenom,
   })
 
-  const { token_0_Price } = pollInfo
+  const { token_0_Price } = poolInfo
 
   const change1d = useMemo(() => {
     if (history) {

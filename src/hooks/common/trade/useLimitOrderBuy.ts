@@ -79,12 +79,12 @@ const useLimitOrderBuy = ({
   const connectedWallet = useConnectedWallet()
   const { limitOrder, miawToken } = useNetwork()
 
-  const { pollInfo } = usePool({
+  const { poolInfo } = usePool({
     pairContract,
     token_0_ContractOrDenom: askContractOrDenom,
   })
 
-  const askTokenPrice = UTIL.toBn(pollInfo.token_0_Price)
+  const askTokenPrice = UTIL.toBn(poolInfo.token_0_Price)
     .dp(6)
     .toString(10) as Token
 

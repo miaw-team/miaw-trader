@@ -10,9 +10,9 @@ import {
 } from 'logics/pool'
 
 export type UsePoolListReturn = {
-  pollInfoList: {
+  poolInfoList: {
     token: TokenType
-    pollByUstInfo: ExtractPoolByUstResponseType
+    poolByUstInfo: ExtractPoolByUstResponseType
   }[]
   refetch: () => void
 }
@@ -53,16 +53,16 @@ const usePoolList = ({
     }
   )
 
-  const pollInfoList = useMemo(() => {
+  const poolInfoList = useMemo(() => {
     return _.map(data, (item) => {
       return {
         token: item.token,
-        pollByUstInfo: poolByUstResponseParser(item.ustFetchData),
+        poolByUstInfo: poolByUstResponseParser(item.ustFetchData),
       }
     })
   }, [data])
 
-  return { pollInfoList, refetch }
+  return { poolInfoList, refetch }
 }
 
 export default usePoolList

@@ -78,15 +78,15 @@ const LpOfLpItem = ({
   const [convertedBalances, setConvertedBalances] =
     useState<{ [symbol: string]: Token }>()
 
-  const { pollInfo } = usePool({
+  const { poolInfo } = usePool({
     pairContract: item.lpOfLp_Pair,
     token_0_ContractOrDenom: item.token_0_Contract,
   })
-  const { pollInfo: pollInfoOfToken_0 } = usePool({
+  const { poolInfo: poolInfoOfToken_0 } = usePool({
     pairContract: item.token_0_Pair,
     token_0_ContractOrDenom: item.token_0_Combined[0],
   })
-  const { pollInfo: pollInfoOfToken_1 } = usePool({
+  const { poolInfo: poolInfoOfToken_1 } = usePool({
     pairContract: item.token_1_Pair,
     token_0_ContractOrDenom: item.token_1_Combined[0],
   })
@@ -99,14 +99,14 @@ const LpOfLpItem = ({
 
   useEffect(() => {
     if (
-      +pollInfo.totalShare > 0 &&
-      +pollInfoOfToken_0.totalShare > 0 &&
-      +pollInfoOfToken_1.totalShare > 0
+      +poolInfo.totalShare > 0 &&
+      +poolInfoOfToken_0.totalShare > 0 &&
+      +poolInfoOfToken_1.totalShare > 0
     ) {
       if (UTIL.toBn(myLpOfLp).gt(0)) {
         const { token_0_Amount = '0' as Token, token_1_Amount = '0' as Token } =
           LpLpSimulation({
-            pollInfo,
+            poolInfo,
             ulp: myLpOfLp as uLP,
             userLpBalance: myLpOfLp as uLP,
           })
@@ -115,7 +115,7 @@ const LpOfLpItem = ({
           token_0_Amount: token_0_0_Amount = '0' as Token,
           token_1_Amount: token_0_1_Amount = '0' as Token,
         } = LpLpSimulation({
-          pollInfo: pollInfoOfToken_0,
+          poolInfo: poolInfoOfToken_0,
           ulp: UTIL.microfy(token_0_Amount) as uLP,
           userLpBalance: UTIL.microfy(token_0_Amount) as uLP,
         })
@@ -124,7 +124,7 @@ const LpOfLpItem = ({
           token_0_Amount: token_1_0_Amount = '0' as Token,
           token_1_Amount: token_1_1_Amount = '0' as Token,
         } = LpLpSimulation({
-          pollInfo: pollInfoOfToken_1,
+          poolInfo: poolInfoOfToken_1,
           ulp: UTIL.microfy(token_1_Amount) as uLP,
           userLpBalance: UTIL.microfy(token_1_Amount) as uLP,
         })
@@ -165,7 +165,7 @@ const LpOfLpItem = ({
     return (): void => {
       setConvertedBalances(undefined)
     }
-  }, [pollInfo, pollInfoOfToken_0, pollInfoOfToken_1, myLpOfLp])
+  }, [poolInfo, poolInfoOfToken_0, poolInfoOfToken_1, myLpOfLp])
 
   const ConvertedBal = useCallback((): ReactElement => {
     let index = 0
@@ -232,7 +232,7 @@ const LpOfLpItem = ({
         </Row>
         <View>
           <FormText fontType="R16">
-            {`- PoolSize : ${UTIL.formatAmount(pollInfo.token_0_PoolSize)} LP`}
+            {`- PoolSize : ${UTIL.formatAmount(poolInfo.token_0_PoolSize)} LP`}
           </FormText>
         </View>
       </StyledLpBox>
@@ -267,7 +267,7 @@ const LpOfLpItem = ({
         </Row>
         <View>
           <FormText fontType="R16">
-            {`- PoolSize : ${UTIL.formatAmount(pollInfo.token_1_PoolSize)} LP`}
+            {`- PoolSize : ${UTIL.formatAmount(poolInfo.token_1_PoolSize)} LP`}
           </FormText>
         </View>
       </StyledLpBox>

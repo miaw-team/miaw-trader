@@ -15,7 +15,7 @@ import postTxStore from 'store/postTxStore'
 export type UseLpStakingInfoReturn = {
   apr: string
   totalLpStaked: uLP
-  pollInfo: ExtractPoolResponseType
+  poolInfo: ExtractPoolResponseType
 }
 
 const useLpStakingInfo = ({
@@ -24,11 +24,11 @@ const useLpStakingInfo = ({
   selectedLpStaking: LpStakingType
 }): UseLpStakingInfoReturn => {
   const postTxResult = useRecoilValue(postTxStore.postTxResult)
-  const { pollInfo, refetch: refetchPollInfo } = usePool({
+  const { poolInfo, refetch: refetchPollInfo } = usePool({
     pairContract: selectedLpStaking.lpPair,
     token_0_ContractOrDenom: selectedLpStaking.tokenContract,
   })
-  const { token_0_Price } = pollInfo
+  const { token_0_Price } = poolInfo
   const { state, refetch: refetchState } = useLpStakingState({
     lpStaking: selectedLpStaking.lpStaking,
   })
@@ -43,9 +43,9 @@ const useLpStakingInfo = ({
       if (rewardYear) {
         const rewardAmountThisYear = rewardYear[2]
 
-        const lpTokenPrice = UTIL.toBn(pollInfo.token_1_PoolSize)
+        const lpTokenPrice = UTIL.toBn(poolInfo.token_1_PoolSize)
           .multipliedBy(2)
-          .div(pollInfo.totalShare)
+          .div(poolInfo.totalShare)
 
         const totalValueLocked = UTIL.toBn(
           state.total_bond_amount
@@ -69,7 +69,7 @@ const useLpStakingInfo = ({
   }, [postTxResult.status])
 
   return {
-    pollInfo,
+    poolInfo,
     apr,
     totalLpStaked: (state?.total_bond_amount || '0') as uLP,
   }
