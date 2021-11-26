@@ -1,4 +1,4 @@
-import { Coin, CreateTxOptions, StdFee } from '@terra-money/terra.js'
+import { Coin, CreateTxOptions, Fee } from '@terra-money/terra.js'
 import {
   TxResult,
   useConnectedWallet,
@@ -12,7 +12,7 @@ import postTxStore from 'store/postTxStore'
 
 export type UsePostTxReturn = {
   getTax: (props: { uusd: uUST }) => Promise<Coin>
-  getFee: (props: { txOptions: CreateTxOptions }) => Promise<StdFee | undefined>
+  getFee: (props: { txOptions: CreateTxOptions }) => Promise<Fee | undefined>
   postTx: (props: { txOptions: CreateTxOptions }) => Promise<void>
   resetPostTx: () => void
 }
@@ -33,11 +33,14 @@ const usePostTx = (): UsePostTxReturn => {
     txOptions,
   }: {
     txOptions: CreateTxOptions
-  }): Promise<StdFee | undefined> => {
+  }): Promise<Fee | undefined> => {
     if (connectedWallet && txOptions.msgs.length > 0) {
-      return lcd.tx.estimateFee(connectedWallet.walletAddress, txOptions.msgs, {
-        ...txOptions,
-      })
+      const createdTx = await lcd.tx.create(
+        [{ address: connectedWallet.walletAddress }],
+        txOptions
+      )
+
+      return createdTx.auth_info.fee
     }
   }
 

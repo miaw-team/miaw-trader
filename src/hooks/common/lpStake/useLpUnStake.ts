@@ -1,9 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import {
-  CreateTxOptions,
-  MsgExecuteContract,
-  StdFee,
-} from '@terra-money/terra.js'
+import { CreateTxOptions, MsgExecuteContract, Fee } from '@terra-money/terra.js'
 import { useConnectedWallet } from '@terra-money/wallet-provider'
 import { useRecoilValue } from 'recoil'
 
@@ -36,7 +32,7 @@ export type UseLpUnStakeReturn = {
   setLpTokenAmount: (value: LP) => void
   lpTokenAmountErrMsg: string
 
-  fee?: StdFee
+  fee?: Fee
 
   onClickLpUnStake: () => void
   invalidForm: boolean

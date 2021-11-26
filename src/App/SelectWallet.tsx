@@ -111,7 +111,7 @@ const SelectWallet = (): ReactElement => {
 
   const availableExt =
     status !== WalletStatus.INITIALIZING &&
-    false === availableInstallTypes.includes(ConnectType.CHROME_EXTENSION) &&
+    false === availableInstallTypes.includes(ConnectType.EXTENSION) &&
     availableExtBrowser
 
   const errorMessage: {
@@ -130,7 +130,7 @@ const SelectWallet = (): ReactElement => {
     errorMessage.message = 'Download'
     errorMessage.linkMessage = 'Terra Station Extension'
     errorMessage.onClick = (): void => {
-      install(ConnectType.CHROME_EXTENSION)
+      install(ConnectType.EXTENSION)
     }
   }
 
@@ -160,7 +160,7 @@ const SelectWallet = (): ReactElement => {
             <StyledConnectBtn
               disabled={false === availableExt}
               onClick={(): void => {
-                availableExt && connectTo(ConnectType.CHROME_EXTENSION)
+                availableExt && connectTo(ConnectType.EXTENSION)
               }}
             >
               <View>

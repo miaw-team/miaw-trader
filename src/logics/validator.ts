@@ -1,4 +1,4 @@
-import { StdFee } from '@terra-money/terra.js'
+import { Fee } from '@terra-money/terra.js'
 import { UTIL, MESSAGE } from 'consts'
 import { Token, uUST } from 'types'
 
@@ -118,7 +118,7 @@ export const validateFeeTax = ({
   tax,
 }: {
   availableUusd: uUST
-  fee?: StdFee
+  fee?: Fee
   tax?: uUST
 }): string => {
   const ust = UTIL.toBn(availableUusd)

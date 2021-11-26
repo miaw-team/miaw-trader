@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { CreateTxOptions, StdFee } from '@terra-money/terra.js'
+import { CreateTxOptions, Fee } from '@terra-money/terra.js'
 import { useDebouncedCallback } from 'use-debounce'
 import usePostTx from './usePostTx'
 import { useConnectedWallet } from '@terra-money/wallet-provider'
@@ -11,9 +11,9 @@ const useCalcFee = ({
   isValid: boolean
   txOptions: CreateTxOptions
 }): {
-  fee?: StdFee
+  fee?: Fee
 } => {
-  const [fee, setFee] = useState<StdFee>()
+  const [fee, setFee] = useState<Fee>()
   const connectedWallet = useConnectedWallet()
   const { getFee } = usePostTx()
   const dbcGetFee = useDebouncedCallback(async () => {

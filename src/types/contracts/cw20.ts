@@ -8,18 +8,18 @@ export namespace cw20 {
     }
   }
 
-  export interface BalanceResponse<T extends uToken> {
-    balance: T
+  export interface BalanceResponse {
+    balance: uToken
   }
 
   export interface TokenInfo {
     token_info: {}
   }
 
-  export interface TokenInfoResponse<T extends uToken> {
+  export interface TokenInfoResponse {
     decimals: number
     name: string
     symbol: symbol
-    total_supply: T
+    total_supply: uToken
   }
 }

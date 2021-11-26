@@ -24,8 +24,8 @@ const useUserBalance = ({
   )
 
   const userBalances = useMemo(() => {
-    const uusd = data?.get('uusd')?.amount.toString()
-    const uluna = data?.get('uluna')?.amount.toString()
+    const uusd = data?.[0]?.get('uusd')?.amount.toString()
+    const uluna = data?.[0]?.get('uluna')?.amount.toString()
 
     return {
       [TokenDenomEnum.uusd]: (uusd || '0') as uUST,

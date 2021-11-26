@@ -1,9 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import {
-  CreateTxOptions,
-  MsgExecuteContract,
-  StdFee,
-} from '@terra-money/terra.js'
+import { CreateTxOptions, MsgExecuteContract, Fee } from '@terra-money/terra.js'
 import { useConnectedWallet } from '@terra-money/wallet-provider'
 import { useDebouncedCallback } from 'use-debounce/lib'
 import { useRecoilValue } from 'recoil'
@@ -40,7 +36,7 @@ export type UseLpWithdrawReturn = {
   updateLpTokenAmount: (value: LP) => void
   lpTokenAmountErrMsg: string
 
-  fee?: StdFee
+  fee?: Fee
   tax: uUST
   simulation?: LpSimulation
 

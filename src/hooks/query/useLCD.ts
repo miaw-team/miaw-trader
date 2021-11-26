@@ -11,7 +11,7 @@ const useLCD = (): {
   lcd: LCDClient
   lastSyncedHeightFetch: () => Promise<string>
   txInfoFetch: (props: { txHash: string }) => Promise<TxInfo>
-  balanceFetch: (props: { address: string }) => Promise<Coins>
+  balanceFetch: (props: { address: string }) => Promise<[Coins, any]>
   wasmFetch: <Msg extends object, Response>(props: {
     contract: ContractAddr
     msg: Msg
@@ -48,8 +48,11 @@ const useLCD = (): {
   const txInfoFetch = ({ txHash }: { txHash: string }): Promise<TxInfo> =>
     lcd.tx.txInfo(txHash)
 
-  const balanceFetch = ({ address }: { address: string }): Promise<Coins> =>
-    lcd.bank.balance(address)
+  const balanceFetch = ({
+    address,
+  }: {
+    address: string
+  }): Promise<[Coins, any]> => lcd.bank.balance(address)
 
   const wasmFetch = <Msg extends object, Response>({
     contract,

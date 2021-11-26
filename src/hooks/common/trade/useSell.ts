@@ -1,9 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import {
-  CreateTxOptions,
-  MsgExecuteContract,
-  StdFee,
-} from '@terra-money/terra.js'
+import { CreateTxOptions, MsgExecuteContract, Fee } from '@terra-money/terra.js'
 import { useConnectedWallet } from '@terra-money/wallet-provider'
 import { useRecoilValue } from 'recoil'
 
@@ -53,7 +49,7 @@ export type UseSellReturn = {
   updateToAmount: (value: Native) => void
   toAmountErrMsg: string
 
-  fee?: StdFee
+  fee?: Fee
   tax: uUST
   simulation?: TradeSimulation<uToken, uNative>
 

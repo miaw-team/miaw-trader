@@ -2,7 +2,7 @@ import {
   CreateTxOptions,
   MsgExecuteContract,
   AccAddress,
-  StdFee,
+  Fee,
 } from '@terra-money/terra.js'
 import { useConnectedWallet } from '@terra-money/wallet-provider'
 
@@ -27,7 +27,7 @@ export type UseSendReturn = {
   setRecipient: (value: string) => void
   recipientErrMsg: string
   postTx: UsePostTxReturn
-  fee?: StdFee
+  fee?: Fee
   invalidForm: boolean
   myBalance: UseMyBalanceReturn
 }

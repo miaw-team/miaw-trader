@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
-import { CreateTxOptions, StdFee } from '@terra-money/terra.js'
+import { CreateTxOptions, Fee } from '@terra-money/terra.js'
+import { useConnectedWallet } from '@terra-money/wallet-provider'
 
 import { UTIL } from 'consts'
 
@@ -11,12 +12,11 @@ import usePostTx, { UsePostTxReturn } from '../usePostTx'
 import useLpStakerInfo, {
   UseLpStakerInfoReturn,
 } from 'hooks/query/lpStaking/useLpStakerInfo'
-import { useConnectedWallet } from '@terra-dev/use-wallet'
 
 export type UseLpClaimReturn = {
   stakerInfoReturn: UseLpStakerInfoReturn
   onClickClaim: () => void
-  fee?: StdFee
+  fee?: Fee
   postTxReturn: UsePostTxReturn
   submitErrMsg: string
 }
