@@ -19,6 +19,7 @@ const useTxInfo = (): {
 
   const txHash = useMemo(() => {
     if (postTxResult.status === PostTxStatus.BROADCAST) {
+      setRunInterval(true)
       return postTxResult.value.result.txhash
     } else if (postTxResult.status === PostTxStatus.DONE) {
       return postTxResult.value.txhash

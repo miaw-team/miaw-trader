@@ -42,6 +42,8 @@ import SPECLogo from 'images/whitelist/SPEC.png'
 import TWDLogo from 'images/whitelist/TWD.png'
 import STTLogo from 'images/whitelist/STT.png'
 import VKRLogo from 'images/whitelist/VKR.png'
+import PSILogo from 'images/whitelist/PSI.png'
+import KUJILogo from 'images/whitelist/KUJI.png'
 
 import { ContractAddr, TokenDenomEnum } from 'types'
 
@@ -414,6 +416,24 @@ const mainnetTokenList: TokenType<ContractAddr | TokenDenomEnum>[] = [
   //   lp_ust: 'terra1x3musrr03tl3dy9xhagm6r5nthwwxgx0hezc79' as ContractAddr,
   //   pair_ust: 'terra18adm0emn6j3pnc90ldechhun62y898xrdmfgfz' as ContractAddr,
   // },
+  {
+    symbol: 'PSI',
+    name: 'Nexus Psi Token',
+    logo: PSILogo,
+    contractOrDenom:
+      'terra12897djskt9rge8dtmm86w654g7kzckkd698608' as ContractAddr,
+    lp_ust: 'terra1q6r8hfdl203htfvpsmyh8x689lp2g0m7856fwd' as ContractAddr,
+    pair_ust: 'terra163pkeeuwxzr0yhndf8xd2jprm9hrtk59xf7nqf' as ContractAddr,
+  },
+  {
+    symbol: 'KUJI',
+    name: 'Kujira KUJI Token',
+    logo: KUJILogo,
+    contractOrDenom:
+      'terra1xfsdgcemqwxp4hhnyk4rle6wr22sseq7j07dnn' as ContractAddr,
+    lp_ust: 'terra1cmqv3sjew8kcm3j907x2026e4n0ejl2jackxlx' as ContractAddr,
+    pair_ust: 'terra1zkyrfyq7x9v5vqnnrznn3kvj35az4f6jxftrl2' as ContractAddr,
+  },
 ]
 
 const testnetTokenList: TokenType[] = [
