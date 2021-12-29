@@ -4,26 +4,25 @@ import useLCD from './useLCD'
 import useReactQuery from '../common/useReactQuery'
 
 import { QueryKeyEnum, TokenDenomEnum, uUST, uLuna, ContractAddr } from 'types'
+import { useConnectedWallet } from '@terra-money/wallet-provider'
 
-const useUserBalance = ({
-  address,
-}: {
-  address: ContractAddr
-}): {
+const useMyNativeBalance = (): {
   refetch: () => void
-  userBalances: { [TokenDenomEnum.uusd]: uUST; [TokenDenomEnum.uluna]: uLuna }
+  balances: { [TokenDenomEnum.uusd]: uUST; [TokenDenomEnum.uluna]: uLuna }
 } => {
   const { balanceFetch } = useLCD()
+  const connectedWallet = useConnectedWallet()
+  const myAddress = (connectedWallet?.walletAddress || '') as ContractAddr
 
   const { data, refetch } = useReactQuery(
-    [QueryKeyEnum.USER_BALANCE_ADDRESS, address],
-    () => balanceFetch({ address }),
+    [QueryKeyEnum.USER_BALANCE_ADDRESS, myAddress],
+    () => balanceFetch({ address: myAddress }),
     {
-      enabled: !!address,
+      enabled: !!myAddress,
     }
   )
 
-  const userBalances = useMemo(() => {
+  const balances = useMemo(() => {
     const uusd = data?.[0]?.get('uusd')?.amount.toString()
     const uluna = data?.[0]?.get('uluna')?.amount.toString()
 
@@ -33,7 +32,7 @@ const useUserBalance = ({
     }
   }, [data])
 
-  return { refetch, userBalances }
+  return { refetch, balances }
 }
 
-export default useUserBalance
+export default useMyNativeBalance

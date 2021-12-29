@@ -7,6 +7,18 @@ export type AddressMap = {
   lotaUstLPToken: ContractAddr
 }
 
+export enum DexEnum {
+  terraswap = 'terraswap',
+  astroport = 'astroport',
+}
+
+export type PairType = {
+  dex: DexEnum
+  denom: TokenDenomEnum
+  pair: ContractAddr
+  lp: ContractAddr
+}
+
 export type TokenType<
   T extends ContractAddr | TokenDenomEnum = ContractAddr | TokenDenomEnum
 > = {
@@ -14,10 +26,7 @@ export type TokenType<
   name: string
   logo: string
   contractOrDenom: T
-  lp_ust?: ContractAddr
-  pair_ust?: ContractAddr
-  lp_luna?: ContractAddr
-  pair_luna?: ContractAddr
+  pairList: PairType[]
 }
 
 export type LpofLpType = {

@@ -59,7 +59,15 @@ const useLpProvide = ({
   token_1_Symbol: string
   pairContract: ContractAddr
 }): UseLpProvideReturn => {
-  const { getTokenBalance } = useMyBalance()
+  const { balance: uusdBal } = useMyBalance({
+    contractOrDenom: TokenDenomEnum.uusd,
+  })
+  const { balance: token_0_bal } = useMyBalance({
+    contractOrDenom: token_0_ContractOrDenom,
+  })
+  const { balance: token_1_bal } = useMyBalance({
+    contractOrDenom: token_1_ContractOrDenom,
+  })
 
   const { getLpProvideMsgs } = useFabricator()
   const connectedWallet = useConnectedWallet()
@@ -76,9 +84,7 @@ const useLpProvide = ({
 
   const [token_0_Amount, setToken_0_Amount] = useState('' as Token)
   const token_0_AmountErrMsg = useMemo(() => {
-    const myToken_0_Amount = UTIL.demicrofy(
-      getTokenBalance(token_0_ContractOrDenom)
-    )
+    const myToken_0_Amount = UTIL.demicrofy(token_0_bal)
     return validateFormInputAmount({
       input: token_0_Amount,
       max: myToken_0_Amount,
@@ -87,9 +93,7 @@ const useLpProvide = ({
 
   const [token_1_Amount, setToken_1_Amount] = useState('' as Token)
   const token_1_AmountErrMsg = useMemo(() => {
-    const myToken_1_Amount = UTIL.demicrofy(
-      getTokenBalance(token_1_ContractOrDenom)
-    )
+    const myToken_1_Amount = UTIL.demicrofy(token_1_bal)
     return validateFormInputAmount({
       input: token_1_Amount,
       max: myToken_1_Amount,
@@ -126,7 +130,7 @@ const useLpProvide = ({
 
   const submitErrMsg = useMemo(() => {
     if (fee) {
-      const ust = UTIL.toBn(getTokenBalance(TokenDenomEnum.uusd))
+      const ust = UTIL.toBn(uusdBal)
       const uusdFee =
         fee.amount
           .toData()
@@ -190,6 +194,10 @@ const useLpProvide = ({
     setToken_1_Amount('' as Token)
     setToken_0_Amount('' as Token)
   }
+
+  useEffect(() => {
+    updateToken_0_Amount(token_0_Amount)
+  }, [pairContract])
 
   useEffect(() => {
     if (postTxResult.status === PostTxStatus.DONE) {

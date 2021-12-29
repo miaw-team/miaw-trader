@@ -30,8 +30,10 @@ const TopInfo = ({
 }): ReactElement => {
   const sayMiawReturn = useSayMiaw({ miawToken })
   const { name } = useMyName()
-  const { getTokenBalance } = useMyBalance()
-  const myMiaw = getTokenBalance(miawToken.contractOrDenom)
+
+  const { balance: myMiaw } = useMyBalance({
+    contractOrDenom: miawToken.contractOrDenom,
+  })
 
   return (
     <StyledContainer>

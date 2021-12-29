@@ -7,7 +7,13 @@ import { COLOR, STYLE, UTIL } from 'consts'
 
 import { FormImage, FormText, Card, Row, View, FormInput } from 'components'
 
-import { RoutePath, uToken } from 'types'
+import {
+  ContractAddr,
+  RoutePath,
+  TokenDenomEnum,
+  TokenType,
+  uToken,
+} from 'types'
 import useRoute from 'hooks/common/useRoute'
 import {
   SortedTokenType,
@@ -15,6 +21,7 @@ import {
   UseTokenListReturn,
 } from 'hooks/common/home/useTokenList'
 import useFavoriteToken from 'hooks/common/useFavoriteToken'
+import { ExtractPoolByTsResponseType } from 'logics/pool'
 
 const StyledCard = styled(Card)`
   width: 400px;
@@ -36,6 +43,7 @@ const StyledSort = styled(View)`
 const StyledTokenItem = styled(Row)`
   ${STYLE.clickable}
   padding:10px 0;
+  align-items: center;
 `
 
 const StyledTokenItemBox = styled(View)`
@@ -48,20 +56,23 @@ const StyledTokenItemBox = styled(View)`
 `
 
 const TokenItem = ({
-  item,
+  token,
+  history,
+  poolByTsInfo,
   closeModal,
 }: {
-  item: SortedTokenType
+  token: TokenType<ContractAddr | TokenDenomEnum>
+  history?: SortedTokenType['history']
+  poolByTsInfo: ExtractPoolByTsResponseType
   closeModal?: () => void
 }): ReactElement => {
-  const { token, poolByUstInfo } = item
-  const { tokenPricePerUst, ustPricePerToken, ustPoolSize } = poolByUstInfo
+  const { tokenPricePerUst, ustPoolSize } = poolByTsInfo
   const { insertRouteParam } = useRoute<RoutePath.home>()
 
   const { addFavoriteList, removeFavoriteList, favoriteList } =
     useFavoriteToken()
 
-  const isFavorite = favoriteList.includes(item.token.symbol)
+  const isFavorite = favoriteList.includes(token.symbol)
 
   const displayPricePerUst = useMemo(() => {
     const tokenPricePerUstBn = UTIL.toBn(tokenPricePerUst)
@@ -70,14 +81,6 @@ const TokenItem = ({
     }
     return tokenPricePerUstBn.toFixed(3)
   }, [tokenPricePerUst])
-
-  const displayPricePerCw20 = useMemo(() => {
-    const ustPricePerTokenBn = UTIL.toBn(ustPricePerToken)
-    if (ustPricePerTokenBn.isLessThan(0.01)) {
-      return ustPricePerTokenBn.toFixed(6)
-    }
-    return ustPricePerTokenBn.toFixed(3)
-  }, [ustPricePerToken])
 
   const displayUstPoolSize = useMemo(() => {
     const bn = UTIL.toBn(ustPoolSize as string)
@@ -98,17 +101,15 @@ const TokenItem = ({
   }, [ustPoolSize])
 
   const change1d = useMemo(() => {
-    if (item.history) {
-      return {
-        ...item.history,
-      }
+    if (history) {
+      return history
     }
 
     return {
       isIncreased: false,
       changePercent: '-',
     }
-  }, [item.history])
+  }, [history])
 
   return (
     <StyledTokenItem
@@ -145,9 +146,6 @@ const TokenItem = ({
       <View style={{ flex: 1, alignItems: 'flex-end' }}>
         <FormText fontType="B16" color={COLOR.gray._600}>
           {displayPricePerUst}
-        </FormText>
-        <FormText fontType="B12" color={COLOR.gray._600}>
-          {displayPricePerCw20}
         </FormText>
       </View>
       <View style={{ flex: 1, alignItems: 'flex-end' }}>
@@ -255,14 +253,9 @@ const TokenList = ({
         />
         <SortTitle
           title={
-            <View>
-              <FormText fontType="B16" color={COLOR.gray._600}>
-                Price
-              </FormText>
-              <FormText fontType="B12" color={COLOR.gray._600}>
-                /per UST
-              </FormText>
-            </View>
+            <FormText fontType="B16" color={COLOR.gray._600}>
+              Price
+            </FormText>
           }
           sortBy={SortTypeEnum.price}
           selectedSortBy={sortBy}
@@ -286,13 +279,17 @@ const TokenList = ({
       </StyledListHeader>
       <StyledTokenItemBox>
         {_.map(favoriteSortedList.concat(remainSortedList), (item, index) => {
-          return (
-            <TokenItem
-              key={`sortedList-${index}`}
-              item={item}
-              closeModal={closeModal}
-            />
-          )
+          if (item.poolByTsInfo) {
+            return (
+              <TokenItem
+                key={`sortedList-${index}`}
+                poolByTsInfo={item.poolByTsInfo}
+                token={item.token}
+                history={item.history}
+                closeModal={closeModal}
+              />
+            )
+          }
         })}
       </StyledTokenItemBox>
     </StyledCard>

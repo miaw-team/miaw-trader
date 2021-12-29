@@ -61,7 +61,10 @@ const useMyOrder = ({
   tokenToBuySymbol: string
   pairContract: ContractAddr
 }): UseMyOrderReturn => {
-  const { getTokenBalance } = useMyBalance()
+  const { balance: uusdBal } = useMyBalance({
+    contractOrDenom: TokenDenomEnum.uusd,
+  })
+
   const { getCancelOrderMsgs } = useFabricator()
   const connectedWallet = useConnectedWallet()
   const { limitOrder } = useNetwork()
@@ -135,7 +138,7 @@ const useMyOrder = ({
     let msg = ''
 
     if (fee) {
-      let availableUusd = UTIL.toBn(getTokenBalance(TokenDenomEnum.uusd))
+      let availableUusd = UTIL.toBn(uusdBal)
 
       msg = validateFeeTax({
         availableUusd: availableUusd.toFixed(0) as uUST,

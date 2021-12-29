@@ -39,8 +39,6 @@ const LpWithdrawForm = ({
 }: {
   lpWithdrawReturn: UseLpWithdrawReturn
 }): ReactElement => {
-  const { getTokenBalance } = useMyBalance()
-
   const {
     lpContract,
     token_0_Symbol,
@@ -53,6 +51,10 @@ const LpWithdrawForm = ({
     tax,
     simulation,
   } = lpWithdrawReturn
+
+  const { balance: lpBal } = useMyBalance({
+    contractOrDenom: lpContract,
+  })
 
   const feeData = useMemo(
     () =>
@@ -142,7 +144,7 @@ const LpWithdrawForm = ({
         />
         <StyledMaxBalance>
           <MaxButton
-            value={getTokenBalance(lpContract)}
+            value={lpBal}
             onClick={(value): void => {
               updateLpTokenAmount(UTIL.demicrofy(value) as LP)
             }}

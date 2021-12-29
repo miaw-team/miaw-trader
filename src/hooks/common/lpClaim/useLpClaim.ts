@@ -22,7 +22,9 @@ export type UseLpClaimReturn = {
 }
 
 const useLpClaim = ({ item }: { item: LpStakingType }): UseLpClaimReturn => {
-  const { getTokenBalance } = useMyBalance()
+  const { balance: uusdBal } = useMyBalance({
+    contractOrDenom: TokenDenomEnum.uusd,
+  })
 
   const connectedWallet = useConnectedWallet()
   const myAddress = (connectedWallet?.walletAddress || '') as ContractAddr
@@ -50,7 +52,7 @@ const useLpClaim = ({ item }: { item: LpStakingType }): UseLpClaimReturn => {
 
   const submitErrMsg = useMemo(() => {
     if (fee) {
-      const ust = UTIL.toBn(getTokenBalance(TokenDenomEnum.uusd))
+      const ust = UTIL.toBn(uusdBal)
       const uusdFee =
         fee.amount
           .toData()

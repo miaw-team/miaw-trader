@@ -1,66 +1,41 @@
-import { ReactElement, useState, useEffect } from 'react'
-import { useRecoilState } from 'recoil'
-import { isTxError } from '@terra-money/terra.js'
+import { ReactElement, useState, useMemo } from 'react'
+import { useQueryClient } from 'react-query'
 
 import usePostTx from 'hooks/common/usePostTx'
-import useMyBalance from 'hooks/common/useMyBalance'
 
-import postTxStore from 'store/postTxStore'
-import { PostTxStatus } from 'types'
+import { PostTxStatus, QueryKeyEnum } from 'types'
 
 import Modal from '../../components/Modal'
 import TxStatus from './TxStatus'
-import useTxInfo from 'hooks/query/useTxInfo'
+import usePostTxStatusEffect from 'hooks/common/usePostTxStatusEffect'
+import useTxInfo from 'App/PostTxResult/useTxInfo'
 
 const PostTxResult = (): ReactElement => {
+  useTxInfo()
+  const queryClient = useQueryClient()
   const [isOpen, setIsOpen] = useState(false)
-  const [postTxResult, setPostTxResult] = useRecoilState(
-    postTxStore.postTxResult
-  )
-
-  const { txInfo } = useTxInfo()
 
   const { resetPostTx } = usePostTx()
-  const { refetch } = useMyBalance()
 
   const onClickStop = (): void => {
     resetPostTx()
     setIsOpen(false)
   }
 
-  useEffect(() => {
-    if (postTxResult.status === PostTxStatus.POST) {
-      setIsOpen(true)
-    } else if (
-      [PostTxStatus.DONE, PostTxStatus.ERROR].includes(postTxResult.status)
-    ) {
-      refetch()
-    }
-  }, [postTxResult.status])
-
-  useEffect(() => {
-    let timer: NodeJS.Timeout
-    if (txInfo) {
-      timer = setTimeout(() => {
-        setPostTxResult({
-          status: PostTxStatus.ERROR,
-          error: 'Could not get TxInfo for 20 seconds',
-        })
-      }, 1000 * 20)
-
-      if (txInfo) {
-        clearTimeout(timer)
-        if (isTxError(txInfo)) {
-          setPostTxResult({ status: PostTxStatus.ERROR, error: txInfo.raw_log })
-        } else {
-          setPostTxResult({ status: PostTxStatus.DONE, value: txInfo })
-        }
-      }
-    }
-    return (): void => {
-      clearTimeout(timer)
-    }
-  }, [txInfo])
+  const effectList = useMemo(
+    () => [
+      { when: [PostTxStatus.POST], action: (): void => setIsOpen(true) },
+      {
+        when: [PostTxStatus.DONE, PostTxStatus.ERROR],
+        action: (): void => {
+          queryClient.refetchQueries([QueryKeyEnum.CW20USTLP_BALANCE])
+          queryClient.refetchQueries([QueryKeyEnum.USER_BALANCE_ADDRESS])
+        },
+      },
+    ],
+    []
+  )
+  usePostTxStatusEffect({ effectList })
 
   return (
     <Modal isOpen={isOpen}>

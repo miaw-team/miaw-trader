@@ -7,6 +7,7 @@ import {
   ContractAddr,
   CW20,
   SayOptionEnum,
+  TokenDenomEnum,
   TokenType,
   uCW20,
   uToken,
@@ -16,7 +17,6 @@ import useBurn, { UseBurnReturn } from 'hooks/common/useBurn'
 import useCw20BurnHistory, {
   UseBurnHistoryReturn,
 } from 'hooks/query/miawToken/useBurnHistory'
-import useMyBalance, { UseMyBalanceReturn } from '../useMyBalance'
 import useCw20Info from 'hooks/query/token/useCw20Info'
 import usePool from 'hooks/query/pair/usePool'
 
@@ -30,7 +30,6 @@ export type UseSayMiawReturn = {
     label: string
   }[]
   burnReturn: UseBurnReturn
-  myBalance: UseMyBalanceReturn
   inputMemo: string
   setInputMemo: (value: string) => void
   onChangeOption: (value: SayOptionEnum) => void
@@ -164,10 +163,11 @@ const useSayMiaw = ({
 
   const burnReturn = useBurn({ token: miawToken })
   const { tokenInfo } = useCw20Info({ token: miawToken.contractOrDenom })
-  const myBalance = useMyBalance()
 
   const { poolInfo } = usePool({
-    pairContract: miawToken.pair_ust,
+    pairContract: miawToken.pairList.find(
+      (x) => x.denom === TokenDenomEnum.uusd
+    )?.pair,
     token_0_ContractOrDenom: miawToken.contractOrDenom,
   })
   const burnedAmount = useMemo(() => {
@@ -220,7 +220,6 @@ const useSayMiaw = ({
     miawBurnHistory,
     memoOptions,
     burnReturn,
-    myBalance,
     inputMemo,
     setInputMemo,
     onChangeOption,

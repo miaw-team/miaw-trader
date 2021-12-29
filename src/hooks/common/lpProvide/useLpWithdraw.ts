@@ -60,7 +60,13 @@ const useLpWithdraw = ({
   lpContract: ContractAddr
   pairContract: ContractAddr
 }): UseLpWithdrawReturn => {
-  const { getTokenBalance } = useMyBalance()
+  const { balance: uusdBal } = useMyBalance({
+    contractOrDenom: TokenDenomEnum.uusd,
+  })
+
+  const { balance: lpBal } = useMyBalance({
+    contractOrDenom: lpContract,
+  })
 
   const { getLpWithdrawMsgs } = useFabricator()
   const connectedWallet = useConnectedWallet()
@@ -77,7 +83,7 @@ const useLpWithdraw = ({
 
   const [lpTokenAmount, setLpTokenAmount] = useState('' as LP)
   const lpTokenAmountErrMsg = useMemo(() => {
-    const myTokenUstLp = UTIL.demicrofy(getTokenBalance(lpContract))
+    const myTokenUstLp = UTIL.demicrofy(lpBal)
     return validateFormInputAmount({
       input: lpTokenAmount,
       max: myTokenUstLp,
@@ -112,7 +118,7 @@ const useLpWithdraw = ({
 
   const submitErrMsg = useMemo(() => {
     if (fee) {
-      const ust = UTIL.toBn(getTokenBalance(TokenDenomEnum.uusd))
+      const ust = UTIL.toBn(uusdBal)
       const uusdFee =
         fee.amount
           .toData()
@@ -131,7 +137,7 @@ const useLpWithdraw = ({
       const simulation = await LpLpSimulation({
         poolInfo,
         ulp: nextUlpTokenAmount,
-        userLpBalance: getTokenBalance(lpContract) as uLP,
+        userLpBalance: lpBal as uLP,
       })
       setSimulation(simulation)
 
@@ -168,6 +174,10 @@ const useLpWithdraw = ({
   const initForm = (): void => {
     updateLpTokenAmount('' as LP)
   }
+
+  useEffect(() => {
+    initForm()
+  }, [pairContract])
 
   useEffect(() => {
     if (postTxResult.status === PostTxStatus.DONE) {

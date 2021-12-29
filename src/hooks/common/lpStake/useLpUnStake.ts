@@ -44,7 +44,9 @@ const useLpUnStake = ({
 }: {
   lpStaking: ContractAddr
 }): UseLpUnStakeReturn => {
-  const { getTokenBalance } = useMyBalance()
+  const { balance: uusdBal } = useMyBalance({
+    contractOrDenom: TokenDenomEnum.uusd,
+  })
 
   const { getLpUnStakeMsgs } = useFabricator()
   const connectedWallet = useConnectedWallet()
@@ -87,7 +89,7 @@ const useLpUnStake = ({
 
   const submitErrMsg = useMemo(() => {
     if (fee) {
-      const ust = UTIL.toBn(getTokenBalance(TokenDenomEnum.uusd))
+      const ust = UTIL.toBn(uusdBal)
       const uusdFee =
         fee.amount
           .toData()

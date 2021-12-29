@@ -32,7 +32,6 @@ const LimitOrderBuyForm = ({
 }: {
   useLimitOrderBuyReturn: UseLimitOrderBuyReturn
 }): ReactElement => {
-  const { getTokenBalance } = useMyBalance()
   const {
     askTokenPrice,
     offerTokenSymbol,
@@ -56,6 +55,10 @@ const LimitOrderBuyForm = ({
 
     fee,
   } = useLimitOrderBuyReturn
+
+  const { balance: miawBal } = useMyBalance({
+    contractOrDenom: miawToken.contractOrDenom,
+  })
 
   const feeData = useMemo(
     () =>
@@ -133,7 +136,7 @@ const LimitOrderBuyForm = ({
           />
           <StyledMaxBalance>
             <MaxButton
-              value={getTokenBalance(miawToken.contractOrDenom)}
+              value={miawBal}
               onClick={(value): void => {
                 setMiawAmount(UTIL.demicrofy(value) as Token)
               }}

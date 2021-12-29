@@ -6,8 +6,8 @@ import { UTIL } from 'consts'
 import useNetwork from '../useNetwork'
 import usePoolList from 'hooks/query/pair/usePoolList'
 import useHistoricalDataForList from 'hooks/query/terraswap/useHistoricalDataForList'
-import { TokenType } from 'types'
-import { ExtractPoolByUstResponseType } from 'logics/pool'
+import { ContractAddr, DexEnum, TokenType } from 'types'
+import { ExtractPoolByTsResponseType } from 'logics/pool'
 
 export enum SortTypeEnum {
   name = 'name',
@@ -24,7 +24,7 @@ export type SortedTokenType = {
     changePercent: string
   }
   token: TokenType
-  poolByUstInfo: ExtractPoolByUstResponseType
+  poolByTsInfo?: ExtractPoolByTsResponseType
 }
 
 export type UseTokenListReturn = {
@@ -56,25 +56,51 @@ const useTokenList = (): UseTokenListReturn => {
     return whitelist
   }, [filter])
 
-  const { poolInfoList, refetch } = usePoolList({
-    tokenList: filteredList,
-  })
+  const tsPairContractList = useMemo(() => {
+    const list: {
+      symbol: string
+      tsPairContract: ContractAddr
+    }[] = []
+    _.forEach(filteredList, (token) => {
+      const tsPairContract = token.pairList.find(
+        (x) => x.dex === DexEnum.terraswap
+      )?.pair
+      if (tsPairContract) {
+        list.push({
+          symbol: token.symbol,
+          tsPairContract,
+        })
+      }
+    })
+
+    return list
+  }, [filteredList])
 
   const { historicalTokenPrice } = useHistoricalDataForList({
-    tokenList: _.map(poolInfoList, (item) => item.token),
+    tsPairContractList,
+  })
+
+  const { poolInfoList, refetch } = usePoolList({
+    pairContractList: tsPairContractList.map((x) => ({
+      symbol: x.symbol,
+      pair: x.tsPairContract,
+    })),
   })
 
   const poolInfoListWithHistory = useMemo(() => {
     if (false === isMainnet || historicalTokenPrice.length > 0) {
-      return _.map(poolInfoList, (x) => {
-        const symbol = x.token.symbol
+      return _.map(filteredList, (token) => {
+        const symbol = token.symbol
         const history = historicalTokenPrice.find((x) => x.symbol === symbol)
+        const poolByTsInfo = poolInfoList.find(
+          (x) => x.symbol === symbol
+        )?.poolByTsInfo
 
-        return { ...x, history }
+        return { token, history, poolByTsInfo }
       })
     }
     return []
-  }, [historicalTokenPrice])
+  }, [historicalTokenPrice, poolInfoList])
 
   const sortedList = useMemo(() => {
     if (sortBy === SortTypeEnum.name) {
@@ -87,8 +113,8 @@ const useTokenList = (): UseTokenListReturn => {
     } else if (sortBy === SortTypeEnum.price) {
       return poolInfoListWithHistory.sort((a, b) => {
         if (
-          UTIL.toBn(a.poolByUstInfo.ustPricePerToken).gt(
-            b.poolByUstInfo.ustPricePerToken
+          UTIL.toBn(a.poolByTsInfo?.ustPricePerToken).gt(
+            b.poolByTsInfo?.ustPricePerToken || 0
           )
         ) {
           return sortDesc ? -1 : 1
@@ -98,7 +124,9 @@ const useTokenList = (): UseTokenListReturn => {
     } else if (sortBy === SortTypeEnum.poolSize) {
       return poolInfoListWithHistory.sort((a, b) => {
         if (
-          UTIL.toBn(a.poolByUstInfo.ustPoolSize).gt(b.poolByUstInfo.ustPoolSize)
+          UTIL.toBn(a.poolByTsInfo?.ustPoolSize).gt(
+            b.poolByTsInfo?.ustPoolSize || 0
+          )
         ) {
           return sortDesc ? -1 : 1
         }

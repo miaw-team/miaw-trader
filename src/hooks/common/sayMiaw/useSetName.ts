@@ -14,7 +14,6 @@ import {
 
 import useBurn, { UseBurnReturn } from 'hooks/common/useBurn'
 
-import useMyBalance, { UseMyBalanceReturn } from '../useMyBalance'
 import useMyName from '../useMyName'
 import postTxStore from 'store/postTxStore'
 
@@ -22,7 +21,6 @@ export type UseSetNameReturn = {
   hasName: boolean
   onClickSave: () => void
   burnReturn: UseBurnReturn
-  myBalance: UseMyBalanceReturn
   inputName: string
   setInputName: (value: string) => void
 }
@@ -40,7 +38,6 @@ const useSetName = ({
     ? SayOptionEnum.change_name
     : SayOptionEnum.init_name
   const burnReturn = useBurn({ token: miawToken })
-  const myBalance = useMyBalance()
 
   const [inputName, setInputName] = useState('')
 
@@ -75,7 +72,6 @@ const useSetName = ({
     hasName,
     onClickSave,
     burnReturn,
-    myBalance,
     inputName,
     setInputName,
   }

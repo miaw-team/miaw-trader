@@ -102,7 +102,6 @@ const LpStakingItem = ({
   const { apr, totalLpStaked, poolInfo } = useLpStakingInfo({
     selectedLpStaking: item,
   })
-  const { getTokenBalance } = useMyBalance()
 
   const { onClickClaim, stakerInfoReturn, submitErrMsg } = useLpClaim({ item })
   const { getSymbolByContractOrDenom } = useNetwork()
@@ -110,7 +109,10 @@ const LpStakingItem = ({
   const tokenSymbol = getSymbolByContractOrDenom(item.tokenContract)
   const denomSymbol = getSymbolByContractOrDenom(item.nativeDenom)
 
-  const myLpBalance = getTokenBalance(item.lpContract)
+  const { balance: myLpBalance } = useMyBalance({
+    contractOrDenom: item.lpContract,
+  })
+
   const myLpStakedBalance =
     stakerInfoReturn.stakerInfo?.bond_amount || ('0' as uToken)
   const myLpReward = (stakerInfoReturn.stakerInfo?.pending_reward || '0') as uLP

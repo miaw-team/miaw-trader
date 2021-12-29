@@ -32,7 +32,6 @@ const LpStakeForm = ({
   lpStakeReturn: UseLpStakeReturn
 }): ReactElement => {
   const { isMobileWidth } = useLayout()
-  const { getTokenBalance } = useMyBalance()
   const {
     lpContract,
     fee,
@@ -40,6 +39,10 @@ const LpStakeForm = ({
     setLpTokenAmount,
     lpTokenAmountErrMsg,
   } = lpStakeReturn
+
+  const { balance: lpBal } = useMyBalance({
+    contractOrDenom: lpContract,
+  })
 
   const feeData = useMemo(
     () =>
@@ -75,7 +78,7 @@ const LpStakeForm = ({
           />
           <StyledMaxBalance>
             <MaxButton
-              value={getTokenBalance(lpContract)}
+              value={lpBal}
               onClick={(value): void => {
                 setLpTokenAmount(UTIL.demicrofy(value) as LP)
               }}

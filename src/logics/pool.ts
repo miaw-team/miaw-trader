@@ -10,7 +10,7 @@ import {
   TokenDenomEnum,
 } from 'types'
 
-export type ExtractPoolByUstResponseType = {
+export type ExtractPoolByTsResponseType = {
   tokenPricePerUst: UST
   ustPricePerToken: Token
   totalShare: string
@@ -18,9 +18,9 @@ export type ExtractPoolByUstResponseType = {
   ustPoolSize: uUST
 }
 
-export const poolByUstResponseParser = (
+export const poolByTsResponseParser = (
   data?: terraswap.PoolResponse<uToken>
-): ExtractPoolByUstResponseType => {
+): ExtractPoolByTsResponseType => {
   if (data) {
     const tokenPoolSize =
       data.assets.find((x) => _.get(x.info, 'native_token.denom') !== 'uusd')

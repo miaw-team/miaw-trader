@@ -40,8 +40,6 @@ const LpProvideForm = ({
   lpProvideReturn: UseLpProvideReturn
   selectedLpOfLp: LpofLpType
 }): ReactElement => {
-  const { getTokenBalance } = useMyBalance()
-
   const {
     token_0_ContractOrDenom,
     token_1_ContractOrDenom,
@@ -55,6 +53,14 @@ const LpProvideForm = ({
     updateToken_1_Amount,
     token_1_AmountErrMsg,
   } = lpProvideReturn
+
+  const { balance: token_0_bal } = useMyBalance({
+    contractOrDenom: token_0_ContractOrDenom,
+  })
+
+  const { balance: token_1_bal } = useMyBalance({
+    contractOrDenom: token_1_ContractOrDenom,
+  })
 
   const feeData = useMemo(
     () =>
@@ -122,7 +128,7 @@ const LpProvideForm = ({
           />
           <StyledMaxBalance>
             <MaxButton
-              value={getTokenBalance(token_0_ContractOrDenom)}
+              value={token_0_bal}
               onClick={(value): void => {
                 updateToken_0_Amount(UTIL.demicrofy(value) as Token)
               }}
@@ -156,7 +162,7 @@ const LpProvideForm = ({
           />
           <StyledMaxBalance>
             <MaxButton
-              value={getTokenBalance(token_1_ContractOrDenom)}
+              value={token_1_bal}
               onClick={(value): void => {
                 updateToken_1_Amount(UTIL.demicrofy(value) as UST)
               }}

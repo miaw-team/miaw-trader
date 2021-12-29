@@ -15,6 +15,7 @@ import {
 } from 'components'
 import { TokenDenomEnum, uToken, CW20, TokenType } from 'types'
 import { UseSendReturn } from 'hooks/common/useSend'
+import useMyBalance from 'hooks/common/useMyBalance'
 
 const StyledSection = styled(View)`
   padding-bottom: 20px;
@@ -42,9 +43,12 @@ const SendForm = ({
     memo,
     setMemo,
     memoErrMsg,
-    myBalance,
     fee,
   } = sendProps
+
+  const { balance: tokenBal } = useMyBalance({
+    contractOrDenom: token.contractOrDenom,
+  })
 
   const feeData = useMemo(
     () =>
@@ -80,7 +84,7 @@ const SendForm = ({
           />
           <StyledMaxBalance>
             <MaxButton
-              value={myBalance.getTokenBalance(token.contractOrDenom)}
+              value={tokenBal}
               onClick={(value): void => {
                 setAmount(UTIL.demicrofy(value) as CW20)
               }}

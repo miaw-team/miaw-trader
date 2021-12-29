@@ -84,7 +84,9 @@ const Wallet = (): ReactElement => {
   const connectedWallet = useConnectedWallet()
   const { openSelectWallet } = useSelectWallet()
 
-  const { getTokenBalance } = useMyBalance()
+  const { balance: uusdBal } = useMyBalance({
+    contractOrDenom: TokenDenomEnum.uusd,
+  })
 
   const onClickCopyAddress = (): void => {
     toast(`Copied Miaw!`, {
@@ -116,7 +118,7 @@ const Wallet = (): ReactElement => {
           >
             <IconWallet size={16} color={COLOR.gray._600} />
             <FormText fontType="B16" color={COLOR.gray._600}>
-              {UTIL.formatAmount(getTokenBalance(TokenDenomEnum.uusd))} UST
+              {UTIL.formatAmount(uusdBal)} UST
             </FormText>
           </StyledUserWalletBtn>
           {showWalletInfo && (

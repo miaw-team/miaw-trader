@@ -2,40 +2,40 @@ import { useMemo } from 'react'
 import _ from 'lodash'
 
 import useLCD from '../useLCD'
-import { QueryKeyEnum, terraswap, uToken, TokenType } from 'types'
+import { QueryKeyEnum, terraswap, uToken, ContractAddr } from 'types'
 import useReactQuery from 'hooks/common/useReactQuery'
 import {
-  ExtractPoolByUstResponseType,
-  poolByUstResponseParser,
+  ExtractPoolByTsResponseType,
+  poolByTsResponseParser,
 } from 'logics/pool'
 
 export type UsePoolListReturn = {
   poolInfoList: {
-    token: TokenType
-    poolByUstInfo: ExtractPoolByUstResponseType
+    symbol: string
+    poolByTsInfo: ExtractPoolByTsResponseType
   }[]
   refetch: () => void
 }
 
 const usePoolList = ({
-  tokenList,
+  pairContractList,
 }: {
-  tokenList: TokenType[]
+  pairContractList: { symbol: string; pair: ContractAddr }[]
 }): UsePoolListReturn => {
   const { wasmFetch } = useLCD()
   const { data, refetch } = useReactQuery(
-    [QueryKeyEnum.POOL_LIST, tokenList],
+    [QueryKeyEnum.POOL_LIST, pairContractList],
     () =>
       Promise.all(
-        _.map(tokenList, async (token) => {
+        _.map(pairContractList, async (item) => {
           let ustFetchData: terraswap.PoolResponse<uToken> | undefined =
             undefined
-          if (token.pair_ust) {
+          if (item) {
             ustFetchData = await wasmFetch<
               terraswap.Pool,
               terraswap.PoolResponse<uToken>
             >({
-              contract: token.pair_ust,
+              contract: item.pair,
               msg: {
                 pool: {},
               },
@@ -43,7 +43,7 @@ const usePoolList = ({
           }
 
           return {
-            token,
+            symbol: item.symbol,
             ustFetchData,
           }
         })
@@ -56,8 +56,8 @@ const usePoolList = ({
   const poolInfoList = useMemo(() => {
     return _.map(data, (item) => {
       return {
-        token: item.token,
-        poolByUstInfo: poolByUstResponseParser(item.ustFetchData),
+        symbol: item.symbol,
+        poolByTsInfo: poolByTsResponseParser(item.ustFetchData),
       }
     })
   }, [data])

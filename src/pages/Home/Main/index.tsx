@@ -1,4 +1,4 @@
-import { ReactElement, useMemo, useState } from 'react'
+import { ReactElement, useEffect, useMemo, useState } from 'react'
 import styled from 'styled-components'
 import { IconList } from '@tabler/icons'
 
@@ -6,11 +6,11 @@ import { STYLE, COLOR } from 'consts'
 
 import { View, Modal, FormText, Row } from 'components'
 
-import { RoutePath, TokenDenomEnum } from 'types'
+import { DexEnum, PairType, RoutePath, TokenType } from 'types'
 
 import useRoute from 'hooks/common/useRoute'
 import useLayout from 'hooks/common/useLayout'
-import useTokenList from 'hooks/common/home/useTokenList'
+import useTokenList, { SortedTokenType } from 'hooks/common/home/useTokenList'
 
 import TokenInfo from './TokenInfo'
 import Trade from './Trade'
@@ -53,6 +53,7 @@ const StyledLayout = styled(View)`
 const StyledTokenInfoBox = styled(View)`
   display: grid;
   grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
   row-gap: 20px;
 `
 const StyledTokenListBox = styled(View)``
@@ -76,25 +77,23 @@ const Main = (): ReactElement => {
     return sortedList.find((x) => x.token.symbol === tokenSymbol)
   }, [sortedList, tokenSymbol])
 
-  const tradeBaseDenom = useMemo(
-    () =>
-      selectedToken && 'pair_ust' in selectedToken.token
-        ? TokenDenomEnum.uusd
-        : TokenDenomEnum.uluna,
-    [selectedToken]
-  )
+  const [selectedPairToken, setSelectedPairToken] = useState<{
+    history?: SortedTokenType['history']
+    token: TokenType
+    pairType: PairType
+  }>()
 
-  const pairContract =
-    selectedToken &&
-    (tradeBaseDenom === TokenDenomEnum.uusd
-      ? selectedToken.token.pair_ust
-      : selectedToken.token.pair_luna)
-
-  const lpContract =
-    selectedToken &&
-    (tradeBaseDenom === TokenDenomEnum.uusd
-      ? selectedToken.token.lp_ust
-      : selectedToken.token.lp_luna)
+  useEffect(() => {
+    if (selectedToken?.token) {
+      const list = selectedToken.token.pairList
+      const astroportPair = list.find((x) => x.dex === DexEnum.astroport)
+      if (astroportPair) {
+        setSelectedPairToken({ ...selectedToken, pairType: astroportPair })
+      } else {
+        setSelectedPairToken({ ...selectedToken, pairType: list[0] })
+      }
+    }
+  }, [selectedToken?.token])
 
   return (
     <StyledContainer>
@@ -119,30 +118,32 @@ const Main = (): ReactElement => {
       )}
       <StyledLayout>
         <StyledTokenInfoBox>
-          {selectedToken && pairContract && lpContract ? (
+          {selectedPairToken ? (
             <>
               <TokenInfo
-                selectedToken={selectedToken}
-                pairContract={pairContract}
-                tradeBaseDenom={tradeBaseDenom}
+                {...selectedPairToken}
+                setSelectedPairToken={setSelectedPairToken}
               />
               <StyledTradeBox>
                 <Trade
-                  token={selectedToken.token}
-                  tradeBaseDenom={tradeBaseDenom}
-                  pairContract={pairContract}
+                  token={selectedPairToken.token}
+                  tradeBaseDenom={selectedPairToken.pairType.denom}
+                  pairContract={selectedPairToken.pairType.pair}
                 />
                 <LpProvide
-                  token={selectedToken.token}
-                  tradeBaseDenom={tradeBaseDenom}
-                  pairContract={pairContract}
-                  lpContract={lpContract}
+                  token={selectedPairToken.token}
+                  tradeBaseDenom={selectedPairToken.pairType.denom}
+                  pairContract={selectedPairToken.pairType.pair}
+                  lpContract={selectedPairToken.pairType.lp}
                 />
               </StyledTradeBox>
-              {false === isMobileWidth && (
-                <Analytics pairContract={pairContract} />
+              {false === isMobileWidth &&
+                selectedPairToken.pairType.dex === DexEnum.terraswap && (
+                  <Analytics pairContract={selectedPairToken.pairType.pair} />
+                )}
+              {selectedPairToken.pairType.dex === DexEnum.terraswap && (
+                <TxInfo pairContract={selectedPairToken.pairType.pair} />
               )}
-              <TxInfo pairContract={pairContract} />
             </>
           ) : (
             <NoTokenSelected />

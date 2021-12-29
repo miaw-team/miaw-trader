@@ -1,42 +1,40 @@
-import { useConnectedWallet } from '@terra-money/wallet-provider'
-
 import { UTIL } from 'consts'
 import { ContractAddr, TokenDenomEnum, uToken } from 'types'
-import useUserBalance from 'hooks/query/useUserBalance'
 import useMyCw20Balance from 'hooks/query/token/useMyCw20Balances'
+import useMyNativeBalance from 'hooks/query/useMyNativeBalance'
+import { useMemo } from 'react'
 
 export type UseMyBalanceReturn = {
-  getTokenBalance: (tokenAddress: string) => uToken
+  balance: uToken
   refetch: () => void
 }
 
-const useMyBalance = (): UseMyBalanceReturn => {
-  const connectedWallet = useConnectedWallet()
-  const myAddress = (connectedWallet?.walletAddress || '') as ContractAddr
+const useMyBalance = ({
+  contractOrDenom,
+}: {
+  contractOrDenom: ContractAddr | TokenDenomEnum
+}): UseMyBalanceReturn => {
+  const { balance: cw20balance, refetch: refetchCw20Balance } =
+    useMyCw20Balance({
+      contract: contractOrDenom as ContractAddr,
+    })
 
-  const { myCw20Balances, refetch: refetchCw20Balances } = useMyCw20Balance()
+  const { balances: nativeBalances, refetch: refetchNativeBalances } =
+    useMyNativeBalance()
 
-  const { userBalances, refetch: refetchUserBalance } = useUserBalance({
-    address: myAddress,
-  })
-
-  const getTokenBalance = (tokenAddress: string): uToken => {
-    const balance = myCw20Balances[tokenAddress as ContractAddr]
-
-    const amount = UTIL.isNativeDenom(tokenAddress)
-      ? (userBalances[tokenAddress as TokenDenomEnum] as string as uToken)
-      : balance
-
-    return amount
-  }
+  const balance = useMemo(() => {
+    return UTIL.isNativeDenom(contractOrDenom)
+      ? nativeBalances[contractOrDenom as TokenDenomEnum]
+      : cw20balance
+  }, [contractOrDenom, cw20balance, nativeBalances])
 
   const refetch = (): void => {
-    refetchUserBalance()
-    refetchCw20Balances()
+    refetchNativeBalances()
+    refetchCw20Balance()
   }
 
   return {
-    getTokenBalance,
+    balance,
     refetch,
   }
 }

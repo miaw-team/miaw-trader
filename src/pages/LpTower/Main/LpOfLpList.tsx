@@ -92,10 +92,11 @@ const LpOfLpItem = ({
   })
 
   const { isMobileWidth } = useLayout()
-  const { getTokenBalance } = useMyBalance()
   const { getSymbolByContractOrDenom } = useNetwork()
 
-  const myLpOfLp = getTokenBalance(item.lpOfLp_Lp)
+  const { balance: lpOfLp_LpBal } = useMyBalance({
+    contractOrDenom: item.lpOfLp_Lp,
+  })
 
   useEffect(() => {
     if (
@@ -103,12 +104,12 @@ const LpOfLpItem = ({
       +poolInfoOfToken_0.totalShare > 0 &&
       +poolInfoOfToken_1.totalShare > 0
     ) {
-      if (UTIL.toBn(myLpOfLp).gt(0)) {
+      if (UTIL.toBn(lpOfLp_LpBal).gt(0)) {
         const { token_0_Amount = '0' as Token, token_1_Amount = '0' as Token } =
           LpLpSimulation({
             poolInfo,
-            ulp: myLpOfLp as uLP,
-            userLpBalance: myLpOfLp as uLP,
+            ulp: lpOfLp_LpBal as uLP,
+            userLpBalance: lpOfLp_LpBal as uLP,
           })
 
         const {
@@ -165,7 +166,7 @@ const LpOfLpItem = ({
     return (): void => {
       setConvertedBalances(undefined)
     }
-  }, [poolInfo, poolInfoOfToken_0, poolInfoOfToken_1, myLpOfLp])
+  }, [poolInfo, poolInfoOfToken_0, poolInfoOfToken_1, lpOfLp_LpBal])
 
   const ConvertedBal = useCallback((): ReactElement => {
     let index = 0
@@ -271,10 +272,12 @@ const LpOfLpItem = ({
           </FormText>
         </View>
       </StyledLpBox>
-      {UTIL.toBn(myLpOfLp).gt(0) && (
+      {UTIL.toBn(lpOfLp_LpBal).gt(0) && (
         <View>
           <FormText fontType="B20" style={{ paddingLeft: 5 }}>
-            {`My Lp : ${UTIL.formatAmount(myLpOfLp)} ${item.lpOfLp_LpTicker}`}
+            {`My Lp : ${UTIL.formatAmount(lpOfLp_LpBal)} ${
+              item.lpOfLp_LpTicker
+            }`}
           </FormText>
           <StyledConvertedBalBox>
             <FormText fontType="R16" style={{ paddingRight: 5 }}>

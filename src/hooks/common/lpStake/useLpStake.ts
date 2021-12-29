@@ -37,7 +37,14 @@ const useLpStake = ({
   lpStaking: ContractAddr
   lpContract: ContractAddr
 }): UseLpStakeReturn => {
-  const { getTokenBalance } = useMyBalance()
+  const { balance: uusdBal } = useMyBalance({
+    contractOrDenom: TokenDenomEnum.uusd,
+  })
+
+  const { balance: lpBal } = useMyBalance({
+    contractOrDenom: lpContract,
+  })
+
   const { getLpStakeMsgs } = useFabricator()
   const connectedWallet = useConnectedWallet()
 
@@ -48,7 +55,7 @@ const useLpStake = ({
 
   const [lpTokenAmount, setLpTokenAmount] = useState('' as LP)
   const lpTokenAmountErrMsg = useMemo(() => {
-    const myUlpAmount = UTIL.demicrofy(getTokenBalance(lpContract))
+    const myUlpAmount = UTIL.demicrofy(lpBal)
     return validateFormInputAmount({
       input: lpTokenAmount,
       max: myUlpAmount,
@@ -75,7 +82,7 @@ const useLpStake = ({
 
   const submitErrMsg = useMemo(() => {
     if (fee) {
-      const ust = UTIL.toBn(getTokenBalance(TokenDenomEnum.uusd))
+      const ust = UTIL.toBn(uusdBal)
       const uusdFee =
         fee.amount
           .toData()

@@ -71,7 +71,14 @@ const useSell = ({
   toTokenSymbol: string
   pairContract: ContractAddr
 }): UseSellReturn => {
-  const { getTokenBalance } = useMyBalance()
+  const { balance: uusdBal } = useMyBalance({
+    contractOrDenom: TokenDenomEnum.uusd,
+  })
+
+  const { balance: ofromTokenBal } = useMyBalance({
+    contractOrDenom: fromTokenContractOrDenom,
+  })
+
   const { getSwapMsgs } = useFabricator()
   const connectedWallet = useConnectedWallet()
 
@@ -89,9 +96,7 @@ const useSell = ({
 
   const [fromAmount, setFromAmount] = useState('' as Token)
   const fromAmountErrMsg = useMemo(() => {
-    const myTokenAmount = UTIL.demicrofy(
-      getTokenBalance(fromTokenContractOrDenom)
-    )
+    const myTokenAmount = UTIL.demicrofy(ofromTokenBal)
     return validateFormInputAmount({
       input: fromAmount,
       max: myTokenAmount,
@@ -113,14 +118,16 @@ const useSell = ({
 
   const txOptions: CreateTxOptions = useMemo(() => {
     let msgs: MsgExecuteContract[] = []
-    if (Number(fromAmount) > 0) {
+    const beliefPrice =
+      simulation?.beliefPrice && UTIL.demicrofy(simulation.beliefPrice)
+
+    if (Number(fromAmount) > 0 && UTIL.toBn(beliefPrice).gt(0)) {
       msgs = getSwapMsgs({
         fromAmount,
         fromTokenContractOrDenom,
         pairContract,
         maxSpread: slippage,
-        beliefPrice:
-          simulation?.beliefPrice && UTIL.demicrofy(simulation.beliefPrice),
+        beliefPrice,
       })
     }
     return {
@@ -224,9 +231,7 @@ const useSell = ({
       let msg = ''
 
       if (fee) {
-        const availableUusd = UTIL.toBn(
-          getTokenBalance(TokenDenomEnum.uusd)
-        ).toFixed(0) as uUST
+        const availableUusd = UTIL.toBn(uusdBal).toFixed(0) as uUST
 
         msg = validateFeeTax({ availableUusd, fee, tax })
       }
@@ -249,6 +254,10 @@ const useSell = ({
   const initForm = (): void => {
     updateFromAmount('' as Token)
   }
+
+  useEffect(() => {
+    updateFromAmount(fromAmount)
+  }, [pairContract])
 
   useEffect(() => {
     if (postTxResult.status === PostTxStatus.DONE) {

@@ -70,10 +70,21 @@ const useLimitOrderBuy = ({
   askTokenSymbol: string
   pairContract: ContractAddr
 }): UseLimitOrderBuyReturn => {
-  const { getTokenBalance } = useMyBalance()
+  const { limitOrder, miawToken } = useNetwork()
+  const { balance: uusdBal } = useMyBalance({
+    contractOrDenom: TokenDenomEnum.uusd,
+  })
+
+  const { balance: offerDenomBal } = useMyBalance({
+    contractOrDenom: offerDenom,
+  })
+
+  const { balance: miawBal } = useMyBalance({
+    contractOrDenom: miawToken.contractOrDenom,
+  })
+
   const { getSubmitOrderMsgs } = useFabricator()
   const connectedWallet = useConnectedWallet()
-  const { limitOrder, miawToken } = useNetwork()
 
   const { poolInfo } = usePool({
     pairContract,
@@ -111,16 +122,14 @@ const useLimitOrderBuy = ({
     return '0' as Token
   }, [askAmount, askPrice])
   const offerAmountErrMsg = useMemo(() => {
-    const myOfferToken = UTIL.demicrofy(getTokenBalance(offerDenom))
+    const myOfferToken = UTIL.demicrofy(offerDenomBal)
     return validateFormInputAmount({
       input: offerAmount,
       max: myOfferToken,
     })
   }, [offerAmount])
 
-  const myMiawAmount = UTIL.demicrofy(
-    getTokenBalance(miawToken.contractOrDenom)
-  )
+  const myMiawAmount = UTIL.demicrofy(miawBal)
   const [miawAmount, setMiawAmount] = useState<Token>('1' as Token)
   const miawAmountErrMsg = useMemo(() => {
     return validateFormInputAmount({
@@ -173,7 +182,7 @@ const useLimitOrderBuy = ({
     let msg = ''
 
     if (fee) {
-      let availableUusd = UTIL.toBn(getTokenBalance(TokenDenomEnum.uusd))
+      let availableUusd = UTIL.toBn(uusdBal)
 
       if (offerDenom === TokenDenomEnum.uusd) {
         availableUusd = availableUusd.minus(UTIL.microfy(askAmount))
@@ -196,6 +205,10 @@ const useLimitOrderBuy = ({
     updateAskAmount('' as Token)
     setAskPrice('' as Token)
   }
+
+  useEffect(() => {
+    initForm()
+  }, [pairContract])
 
   useEffect(() => {
     if (postTxResult.status === PostTxStatus.DONE) {

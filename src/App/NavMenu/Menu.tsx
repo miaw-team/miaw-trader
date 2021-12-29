@@ -56,10 +56,6 @@ const Menu = (): ReactElement => {
       title: 'Say Miaw',
     },
     {
-      to: RoutePath.send,
-      title: 'Send Miaw',
-    },
-    {
       to: RoutePath.miaw_paper,
       title: 'Miaw Paper',
     },

@@ -32,7 +32,6 @@ const SellForm = ({
 }: {
   sellReturn: UseSellReturn
 }): ReactElement => {
-  const { getTokenBalance } = useMyBalance()
   const {
     fromTokenContractOrDenom,
     toTokenContractOrDenom,
@@ -51,6 +50,14 @@ const SellForm = ({
     slippage,
     updateSlippage,
   } = sellReturn
+
+  const { balance: fromTokenBal } = useMyBalance({
+    contractOrDenom: fromTokenContractOrDenom,
+  })
+
+  const { balance: toTokenBal } = useMyBalance({
+    contractOrDenom: toTokenContractOrDenom,
+  })
 
   const feeData = useMemo(
     () =>
@@ -120,7 +127,7 @@ const SellForm = ({
           />
           <StyledMaxBalance>
             <MaxButton
-              value={getTokenBalance(fromTokenContractOrDenom)}
+              value={fromTokenBal}
               onClick={(value): void => {
                 updateFromAmount(UTIL.demicrofy(value) as Token)
               }}
@@ -146,7 +153,7 @@ const SellForm = ({
           />
           <StyledMaxBalance>
             <MaxButton
-              value={getTokenBalance(toTokenContractOrDenom)}
+              value={toTokenBal}
               onClick={(value): void => {
                 updateToAmount(UTIL.demicrofy(value) as Native)
               }}

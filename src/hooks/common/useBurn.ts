@@ -26,22 +26,22 @@ const useBurn = ({
 }: {
   token: TokenType<ContractAddr>
 }): UseBurnReturn => {
-  const myBalance = useMyBalance()
+  const { balance: tokenBal } = useMyBalance({
+    contractOrDenom: token.contractOrDenom,
+  })
   const postTx = usePostTx()
   const connectedWallet = useConnectedWallet()
   const myAddress = (connectedWallet?.walletAddress || '') as ContractAddr
 
   const [amount, setAmount] = useState<CW20>('' as CW20)
   const amountErrMsg = useMemo(() => {
-    const myTokenAmount = UTIL.demicrofy(
-      myBalance.getTokenBalance(token.contractOrDenom)
-    )
+    const myTokenAmount = UTIL.demicrofy(tokenBal)
 
     return validateFormInputAmount({
       input: amount,
       max: myTokenAmount,
     })
-  }, [amount, myBalance])
+  }, [amount, tokenBal])
 
   const [memo, setMemo] = useState<string>('')
   const memoErrMsg = useMemo(() => {

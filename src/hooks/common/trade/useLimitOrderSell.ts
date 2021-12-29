@@ -69,10 +69,21 @@ const useLimitOrderSell = ({
   askTokenSymbol: string
   pairContract: ContractAddr
 }): UseLimitOrderSellReturn => {
-  const { getTokenBalance } = useMyBalance()
+  const { limitOrder, miawToken } = useNetwork()
+  const { balance: uusdBal } = useMyBalance({
+    contractOrDenom: TokenDenomEnum.uusd,
+  })
+
+  const { balance: offerDenomBal } = useMyBalance({
+    contractOrDenom: offerContractOrDenom,
+  })
+
+  const { balance: miawBal } = useMyBalance({
+    contractOrDenom: miawToken.contractOrDenom,
+  })
+
   const { getSubmitOrderMsgs } = useFabricator()
   const connectedWallet = useConnectedWallet()
-  const { limitOrder, miawToken } = useNetwork()
 
   const { poolInfo } = usePool({
     pairContract,
@@ -90,7 +101,7 @@ const useLimitOrderSell = ({
 
   const [offerAmount, setOfferAmount] = useState('' as Token)
   const offerAmountErrMsg = useMemo(() => {
-    const myOfferAmount = UTIL.demicrofy(getTokenBalance(offerContractOrDenom))
+    const myOfferAmount = UTIL.demicrofy(offerDenomBal)
     return validateFormInputAmount({
       input: offerAmount,
       max: myOfferAmount,
@@ -112,9 +123,7 @@ const useLimitOrderSell = ({
     return '0' as Token
   }, [offerAmount, askPrice])
 
-  const myMiawAmount = UTIL.demicrofy(
-    getTokenBalance(miawToken.contractOrDenom)
-  )
+  const myMiawAmount = UTIL.demicrofy(miawBal)
   const [miawAmount, setMiawAmount] = useState<Token>('1' as Token)
   const miawAmountErrMsg = useMemo(() => {
     return validateFormInputAmount({
@@ -167,7 +176,7 @@ const useLimitOrderSell = ({
     let msg = ''
 
     if (fee) {
-      let availableUusd = UTIL.toBn(getTokenBalance(TokenDenomEnum.uusd))
+      let availableUusd = UTIL.toBn(uusdBal)
 
       if (offerContractOrDenom === TokenDenomEnum.uusd) {
         availableUusd = availableUusd.minus(UTIL.microfy(askAmount))
@@ -190,6 +199,10 @@ const useLimitOrderSell = ({
     updateOfferAmount('' as Token)
     setAskPrice('' as Token)
   }
+
+  useEffect(() => {
+    initForm()
+  }, [pairContract])
 
   useEffect(() => {
     if (postTxResult.status === PostTxStatus.DONE) {

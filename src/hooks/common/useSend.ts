@@ -12,7 +12,7 @@ import { validateFormInputAmount } from 'logics/validator'
 import { useMemo, useState } from 'react'
 import { ContractAddr, CW20, TokenType } from 'types'
 import useCalcFee from './useCalcFee'
-import useMyBalance, { UseMyBalanceReturn } from './useMyBalance'
+import useMyBalance from './useMyBalance'
 import usePostTx, { UsePostTxReturn } from './usePostTx'
 
 export type UseSendReturn = {
@@ -29,7 +29,6 @@ export type UseSendReturn = {
   postTx: UsePostTxReturn
   fee?: Fee
   invalidForm: boolean
-  myBalance: UseMyBalanceReturn
 }
 
 const useSend = ({
@@ -37,21 +36,21 @@ const useSend = ({
 }: {
   token: TokenType<ContractAddr>
 }): UseSendReturn => {
-  const myBalance = useMyBalance()
+  const { balance: tokenBal } = useMyBalance({
+    contractOrDenom: token.contractOrDenom,
+  })
   const postTx = usePostTx()
   const connectedWallet = useConnectedWallet()
   const myAddress = (connectedWallet?.walletAddress || '') as ContractAddr
 
   const [amount, setAmount] = useState<CW20>('' as CW20)
   const amountErrMsg = useMemo(() => {
-    const myTokenAmount = UTIL.demicrofy(
-      myBalance.getTokenBalance(token.contractOrDenom)
-    )
+    const myTokenAmount = UTIL.demicrofy(tokenBal)
     return validateFormInputAmount({
       input: amount,
       max: myTokenAmount,
     })
-  }, [amount, myBalance])
+  }, [amount, tokenBal])
 
   const [memo, setMemo] = useState<string>('')
   const memoErrMsg = useMemo(() => {
@@ -118,7 +117,6 @@ const useSend = ({
     postTx,
     fee,
     invalidForm,
-    myBalance,
   }
 }
 

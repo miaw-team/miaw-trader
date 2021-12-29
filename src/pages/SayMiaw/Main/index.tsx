@@ -45,7 +45,7 @@ const Contents = ({
   const postTxResult = useRecoilValue(postTxStore.postTxResult)
   const sayMiawReturn = useSayMiaw({ miawToken })
   const { isTabletWidth } = useLayout()
-  const { miawBurnHistory, myBalance, burnReturn } = sayMiawReturn
+  const { miawBurnHistory, burnReturn } = sayMiawReturn
   const burnLeaderBoard = useBurnLeaderBoard()
 
   const closeModal = (): void => {
@@ -54,7 +54,6 @@ const Contents = ({
   useEffect(() => {
     if (postTxResult.status === PostTxStatus.DONE) {
       setTimeout(() => {
-        myBalance.refetch()
         miawBurnHistory.refetch()
         burnReturn.setMemo('')
         burnLeaderBoard.refetch()
@@ -108,8 +107,7 @@ const Contents = ({
 
 const Main = (): ReactElement => {
   const { miawToken } = useNetwork()
-
-  return miawToken?.lp_ust && miawToken?.pair_ust ? (
+  return miawToken ? (
     <Contents miawToken={miawToken} />
   ) : (
     <StyledContainer>

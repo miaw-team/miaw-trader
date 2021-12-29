@@ -28,7 +28,6 @@ const StyledMaxBalance = styled(Row)`
 `
 
 const BuyForm = ({ buyReturn }: { buyReturn: UseBuyReturn }): ReactElement => {
-  const { getTokenBalance } = useMyBalance()
   const {
     fromTokenContractOrDenom,
     toTokenContractOrDenom,
@@ -46,6 +45,14 @@ const BuyForm = ({ buyReturn }: { buyReturn: UseBuyReturn }): ReactElement => {
     slippage,
     updateSlippage,
   } = buyReturn
+
+  const { balance: fromTokenBal } = useMyBalance({
+    contractOrDenom: fromTokenContractOrDenom,
+  })
+
+  const { balance: toTokenBal } = useMyBalance({
+    contractOrDenom: toTokenContractOrDenom,
+  })
 
   const feeData = useMemo(
     () =>
@@ -108,7 +115,7 @@ const BuyForm = ({ buyReturn }: { buyReturn: UseBuyReturn }): ReactElement => {
           />
           <StyledMaxBalance>
             <MaxButton
-              value={getTokenBalance(fromTokenContractOrDenom)}
+              value={fromTokenBal}
               onClick={(value): void => {
                 updateFromAmount(UTIL.demicrofy(value) as Native)
               }}
@@ -134,7 +141,7 @@ const BuyForm = ({ buyReturn }: { buyReturn: UseBuyReturn }): ReactElement => {
           />
           <StyledMaxBalance>
             <MaxButton
-              value={getTokenBalance(toTokenContractOrDenom)}
+              value={toTokenBal}
               onClick={(value): void => {
                 updateToAmount(UTIL.demicrofy(value) as Token)
               }}

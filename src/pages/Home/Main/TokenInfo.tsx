@@ -1,13 +1,25 @@
 import { ReactElement, useMemo } from 'react'
 import styled from 'styled-components'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
-import { IconChartBar, IconCopy, IconLayout } from '@tabler/icons'
+import {
+  IconChartBar,
+  IconCircle,
+  IconCircleCheck,
+  IconCopy,
+  IconLayout,
+} from '@tabler/icons'
 import { toast } from 'react-toastify'
+import _ from 'lodash'
+
+import terraswapLogo from 'images/terraswap.svg'
+import astroportLogo from 'images/astroport.svg'
+import lunaLogo from 'images/whitelist/LUNA.svg'
+import ustLogo from 'images/whitelist/UST.svg'
 
 import { UTIL, STYLE, COLOR, APIURL, ASSET } from 'consts'
 
-import { FormText, Card, FormImage, Row, LinkA } from 'components'
-import { ContractAddr, TokenDenomEnum } from 'types'
+import { FormText, Card, FormImage, Row, LinkA, View } from 'components'
+import { DexEnum, PairType, TokenDenomEnum, TokenType } from 'types'
 import useLayout from 'hooks/common/useLayout'
 
 import { SortedTokenType } from 'hooks/common/home/useTokenList'
@@ -46,20 +58,90 @@ const StyledLinkBox = styled(Row)`
   }
 `
 
-const TokenPrice = ({
-  selectedToken,
-  pairContract,
-  tradeBaseDenom,
+const StyledDexDenomItem = styled(Row)<{ selected: boolean }>`
+  ${STYLE.clickable}
+  border-radius: 8px;
+  padding: 3px 10px;
+  align-items: center;
+  border: 2px solid
+    ${({ selected }): string =>
+      selected ? COLOR.primary._400 : COLOR.gray._300};
+  opacity: ${({ selected }): number => (selected ? 1 : 0.8)};
+  margin-right: 10px;
+`
+
+const SwapBase = ({
+  pairList,
+  pairType,
+  setSelectedPairToken,
 }: {
-  selectedToken: SortedTokenType
-  pairContract: ContractAddr
-  tradeBaseDenom: TokenDenomEnum
+  pairList: PairType[]
+  pairType: PairType
+  setSelectedPairToken: React.Dispatch<
+    React.SetStateAction<
+      | {
+          history?: SortedTokenType['history']
+          token: TokenType
+          pairType: PairType
+        }
+      | undefined
+    >
+  >
 }): ReactElement => {
-  const { history } = selectedToken
+  return (
+    <View style={{ borderTop: `1px solid gray`, paddingTop: 6, marginTop: 6 }}>
+      <FormText fontType="B14">Select Dex / Denom</FormText>
+      <Row>
+        {_.map(pairList, (x, i) => {
+          const dexSrc =
+            x.dex === DexEnum.terraswap ? terraswapLogo : astroportLogo
+          const denomSrc = x.denom === TokenDenomEnum.uluna ? lunaLogo : ustLogo
+          const selected = pairType.pair === x.pair
+          return (
+            <StyledDexDenomItem
+              key={`pairList-${i}`}
+              onClick={(): void => {
+                setSelectedPairToken((ori) => {
+                  if (ori) {
+                    return { ...ori, pairType: x }
+                  }
+                })
+              }}
+              selected={selected}
+            >
+              <View style={{ paddingRight: 6 }}>
+                {selected ? (
+                  <IconCircleCheck color={COLOR.primary._400} />
+                ) : (
+                  <IconCircle color={COLOR.gray._300} />
+                )}
+              </View>
+              <FormImage src={dexSrc} size={26} />
+              <FormText style={{ padding: '0 4px' }}>/</FormText>
+              <FormImage src={denomSrc} size={30} />
+            </StyledDexDenomItem>
+          )
+        })}
+      </Row>
+    </View>
+  )
+}
+
+const TokenPrice = ({
+  history,
+  token,
+  pairType,
+}: {
+  history?: SortedTokenType['history']
+  token: TokenType
+  pairType: PairType
+}): ReactElement => {
+  const pairContract = pairType.pair
+  const tradeBaseDenom = pairType.denom
 
   const { poolInfo } = usePool({
     pairContract,
-    token_0_ContractOrDenom: selectedToken.token.contractOrDenom,
+    token_0_ContractOrDenom: token.contractOrDenom,
   })
 
   const { token_0_Price } = poolInfo
@@ -100,20 +182,30 @@ const TokenPrice = ({
 }
 
 const TokenInfo = ({
-  selectedToken,
-  pairContract,
-  tradeBaseDenom,
+  history,
+  token,
+  pairType,
+  setSelectedPairToken,
 }: {
-  selectedToken: SortedTokenType
-  pairContract: ContractAddr
-  tradeBaseDenom: TokenDenomEnum
+  history?: SortedTokenType['history']
+  token: TokenType
+  pairType: PairType
+  setSelectedPairToken: React.Dispatch<
+    React.SetStateAction<
+      | {
+          history?: SortedTokenType['history']
+          token: TokenType
+          pairType: PairType
+        }
+      | undefined
+    >
+  >
 }): ReactElement => {
-  const { token } = selectedToken
   const { isMobileWidth } = useLayout()
+  const pairContract = pairType.pair
 
-  const chartLink = pairContract && APIURL.getCoinhallLink({ pairContract })
-  const dashboardLink =
-    pairContract && APIURL.getDashboardLink({ pairContract })
+  const chartLink = APIURL.getCoinhallLink({ pairContract })
+  const dashboardLink = APIURL.getDashboardLink({ pairContract })
 
   return (
     <StyledContainer>
@@ -134,11 +226,7 @@ const TokenInfo = ({
               </FormText>
             )}
           </Row>
-          <TokenPrice
-            selectedToken={selectedToken}
-            pairContract={pairContract}
-            tradeBaseDenom={tradeBaseDenom}
-          />
+          <TokenPrice history={history} token={token} pairType={pairType} />
         </StyledSymbolPrice>
       </StyledTokenLogo>
       <StyledNameAddress>
@@ -203,6 +291,11 @@ const TokenInfo = ({
           </Row>
         )}
       </StyledLinkBox>
+      <SwapBase
+        pairList={token.pairList}
+        pairType={pairType}
+        setSelectedPairToken={setSelectedPairToken}
+      />
     </StyledContainer>
   )
 }
