@@ -129,6 +129,7 @@ const Main = (): ReactElement => {
                   token={selectedPairToken.token}
                   tradeBaseDenom={selectedPairToken.pairType.denom}
                   pairContract={selectedPairToken.pairType.pair}
+                  dex={selectedPairToken.pairType.dex}
                 />
                 <LpProvide
                   token={selectedPairToken.token}

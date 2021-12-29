@@ -1,4 +1,4 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { IconSquare, IconCheckbox } from '@tabler/icons'
 
@@ -22,6 +22,7 @@ import {
   TokenType,
   TokenDenomEnum,
   ContractAddr,
+  DexEnum,
 } from 'types'
 
 import MyOrder from './MyOrder'
@@ -59,9 +60,11 @@ const StyledLimitOrderButton = styled(FormText)`
 const Buy = ({
   buyReturn,
   useLimitOrderBuyReturn,
+  dex,
 }: {
   buyReturn: UseBuyReturn
   useLimitOrderBuyReturn: UseLimitOrderBuyReturn
+  dex: DexEnum
 }): ReactElement => {
   const {
     onClickBuy,
@@ -79,21 +82,26 @@ const Buy = ({
 
   const [buyLimitOrder, setBuyLimitOrder] = useState(false)
 
+  useEffect(() => {
+    setBuyLimitOrder(false)
+  }, [dex])
+
   return (
     <>
-      <View style={{ alignItems: 'flex-end' }}>
-        <StyledLimitOrderButton
-          fontType="R16"
-          color={buyLimitOrder ? COLOR.primary._400 : COLOR.text}
-          onClick={(): void => {
-            setBuyLimitOrder(!buyLimitOrder)
-          }}
-        >
-          {buyLimitOrder ? <IconCheckbox /> : <IconSquare />}
-          Limit order
-        </StyledLimitOrderButton>
-      </View>
-
+      {dex === DexEnum.terraswap && (
+        <View style={{ alignItems: 'flex-end' }}>
+          <StyledLimitOrderButton
+            fontType="R16"
+            color={buyLimitOrder ? COLOR.primary._400 : COLOR.text}
+            onClick={(): void => {
+              setBuyLimitOrder(!buyLimitOrder)
+            }}
+          >
+            {buyLimitOrder ? <IconCheckbox /> : <IconSquare />}
+            Limit order
+          </StyledLimitOrderButton>
+        </View>
+      )}
       {buyLimitOrder ? (
         <>
           <LimitOrderBuyForm useLimitOrderBuyReturn={useLimitOrderBuyReturn} />
@@ -132,9 +140,11 @@ const Buy = ({
 const Sell = ({
   sellReturn,
   useLimitOrderSellReturn,
+  dex,
 }: {
   sellReturn: UseSellReturn
   useLimitOrderSellReturn: UseLimitOrderSellReturn
+  dex: DexEnum
 }): ReactElement => {
   const {
     onClickSell,
@@ -151,20 +161,27 @@ const Sell = ({
   } = useLimitOrderSellReturn
 
   const [sellLimitOrder, setSellLimitOrder] = useState(false)
+
+  useEffect(() => {
+    setSellLimitOrder(false)
+  }, [dex])
+
   return (
     <>
-      <View style={{ alignItems: 'flex-end' }}>
-        <StyledLimitOrderButton
-          fontType="R16"
-          color={sellLimitOrder ? COLOR.primary._400 : COLOR.text}
-          onClick={(): void => {
-            setSellLimitOrder(!sellLimitOrder)
-          }}
-        >
-          {sellLimitOrder ? <IconCheckbox /> : <IconSquare />}
-          Limit order
-        </StyledLimitOrderButton>
-      </View>
+      {dex === DexEnum.terraswap && (
+        <View style={{ alignItems: 'flex-end' }}>
+          <StyledLimitOrderButton
+            fontType="R16"
+            color={sellLimitOrder ? COLOR.primary._400 : COLOR.text}
+            onClick={(): void => {
+              setSellLimitOrder(!sellLimitOrder)
+            }}
+          >
+            {sellLimitOrder ? <IconCheckbox /> : <IconSquare />}
+            Limit order
+          </StyledLimitOrderButton>
+        </View>
+      )}
 
       {sellLimitOrder ? (
         <>
@@ -207,10 +224,12 @@ const Trade = ({
   token,
   tradeBaseDenom,
   pairContract,
+  dex,
 }: {
   token: TokenType
   tradeBaseDenom: TokenDenomEnum
   pairContract: ContractAddr
+  dex: DexEnum
 }): ReactElement => {
   const { insertRouteParam, routeParams } = useRoute<RoutePath.home>()
   const tradeType = routeParams?.tradeType || TradeTypeEnum.buy
@@ -275,11 +294,13 @@ const Trade = ({
             <Buy
               buyReturn={buyReturn}
               useLimitOrderBuyReturn={useLimitOrderBuyReturn}
+              dex={dex}
             />
           ) : (
             <Sell
               sellReturn={sellReturn}
               useLimitOrderSellReturn={useLimitOrderSellReturn}
+              dex={dex}
             />
           )}
         </View>
