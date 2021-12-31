@@ -35,9 +35,10 @@ const StyledCard = styled(Card)`
   flex: 1;
 `
 
-const StyledLayout = styled(View)`
+const StyledLayout = styled(View)<{ isLimitOrder: boolean }>`
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: ${({ isLimitOrder }): string =>
+    isLimitOrder ? '1fr 1fr' : '1fr'};
   column-gap: 20px;
 
   @media ${STYLE.media.mobile} {
@@ -276,8 +277,8 @@ const Trade = ({
 
   return (
     <StyledCard>
-      <StyledLayout>
-        <MyOrder myOrderReturn={myOrderReturn} />
+      <StyledLayout isLimitOrder={dex === DexEnum.terraswap}>
+        {dex === DexEnum.terraswap && <MyOrder myOrderReturn={myOrderReturn} />}
         <View style={{ flex: 1 }}>
           <SelectTab
             options={[

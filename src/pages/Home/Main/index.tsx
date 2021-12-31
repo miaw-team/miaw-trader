@@ -27,9 +27,10 @@ const StyledContainer = styled(View)`
   }
 `
 
-const StyledTradeBox = styled(View)`
+const StyledTradeBox = styled(View)<{ isLimitOrder: boolean }>`
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: ${({ isLimitOrder }): string =>
+    isLimitOrder ? '2fr 1fr' : '1fr 1fr'};
   column-gap: 20px;
 
   @media ${STYLE.media.tablet} {
@@ -124,7 +125,11 @@ const Main = (): ReactElement => {
                 {...selectedPairToken}
                 setSelectedPairToken={setSelectedPairToken}
               />
-              <StyledTradeBox>
+              <StyledTradeBox
+                isLimitOrder={
+                  selectedPairToken.pairType.dex === DexEnum.terraswap
+                }
+              >
                 <Trade
                   token={selectedPairToken.token}
                   tradeBaseDenom={selectedPairToken.pairType.denom}

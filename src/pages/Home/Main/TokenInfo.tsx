@@ -116,9 +116,18 @@ const SwapBase = ({
                   <IconCircle color={COLOR.gray._300} />
                 )}
               </View>
-              <FormImage src={dexSrc} size={26} />
-              <FormText style={{ padding: '0 4px' }}>/</FormText>
-              <FormImage src={denomSrc} size={30} />
+              <View>
+                <Row style={{ alignItems: 'center' }}>
+                  <FormImage src={dexSrc} size={26} />
+                  <FormText style={{ padding: '0 4px' }}>/</FormText>
+                  <FormImage src={denomSrc} size={30} />
+                </Row>
+                {x.dex === DexEnum.terraswap && (
+                  <View>
+                    <FormText fontType="R14">Limit order</FormText>
+                  </View>
+                )}
+              </View>
             </StyledDexDenomItem>
           )
         })}
