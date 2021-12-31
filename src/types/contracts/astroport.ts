@@ -3,10 +3,13 @@ import { AssetInfo } from '.'
 import { uToken } from '../currencies'
 import { ContractAddr } from './common'
 
-export namespace terraswap {
-  export type Asset = {
-    info: AssetInfo
-    amount: uToken
+export namespace astroport {
+  export interface Config {
+    config: {}
+  }
+
+  export interface ConfigResponse {
+    amp: number
   }
 
   export interface Pair {

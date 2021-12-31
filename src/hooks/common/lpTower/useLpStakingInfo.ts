@@ -8,8 +8,7 @@ import { UTIL } from 'consts'
 import { LpStakingType, PostTxStatus, uLP } from 'types'
 import useLpStakingState from 'hooks/query/lpStaking/useLpStakingState'
 import useLpStakingConfig from 'hooks/query/lpStaking/useLpStakingConfig'
-import usePool from 'hooks/query/pair/usePool'
-import { ExtractPoolResponseType } from 'logics/pool'
+import usePool, { ExtractPoolResponseType } from 'hooks/query/pair/usePool'
 import postTxStore from 'store/postTxStore'
 
 export type UseLpStakingInfoReturn = {

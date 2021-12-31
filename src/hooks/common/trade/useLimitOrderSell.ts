@@ -26,10 +26,8 @@ import {
   validateFormInputMinAmount,
 } from 'logics/validator'
 import useNetwork from '../useNetwork'
-import usePool from 'hooks/query/pair/usePool'
 
 export type UseLimitOrderSellReturn = {
-  offerTokenPrice: Token
   offerContractOrDenom: ContractAddr | TokenDenomEnum
   askDenom: TokenDenomEnum
   offerTokenSymbol: string
@@ -85,15 +83,6 @@ const useLimitOrderSell = ({
   const { getSubmitOrderMsgs } = useFabricator()
   const connectedWallet = useConnectedWallet()
 
-  const { poolInfo } = usePool({
-    pairContract,
-    token_0_ContractOrDenom: askDenom,
-  })
-
-  const offerTokenPrice = UTIL.toBn(poolInfo.token_1_Price)
-    .dp(6)
-    .toString(10) as Token
-
   const postTxResult = useRecoilValue(postTxStore.postTxResult)
   const { postTx } = usePostTx()
 
@@ -112,7 +101,7 @@ const useLimitOrderSell = ({
   const askPriceErrMsg = useMemo(() => {
     return validateFormInputMinAmount({
       input: askPrice,
-      min: offerTokenPrice,
+      min: '0.000001' as Token,
     })
   }, [askPrice])
 
@@ -211,7 +200,6 @@ const useLimitOrderSell = ({
   }, [postTxResult.status])
 
   return {
-    offerTokenPrice,
     offerContractOrDenom,
     askDenom,
     offerTokenSymbol,

@@ -1,10 +1,10 @@
 import { Coin, Coins, MsgExecuteContract } from '@terra-money/terra.js'
 import { UTIL } from 'consts'
-import { ContractAddr, LP, terraswap, Token, TokenDenomEnum } from 'types'
+import { ContractAddr, LP, AssetInfo, Token, TokenDenomEnum } from 'types'
 
 const getAssetInfo = (
   contractOrDenom: TokenDenomEnum | ContractAddr
-): terraswap.AssetInfo =>
+): AssetInfo =>
   UTIL.isNativeDenom(contractOrDenom)
     ? {
         native_token: {

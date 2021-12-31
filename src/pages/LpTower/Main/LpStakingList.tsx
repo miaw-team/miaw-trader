@@ -22,7 +22,7 @@ import useLpStakingInfo from 'hooks/common/lpTower/useLpStakingInfo'
 import useLpClaim from 'hooks/common/lpClaim/useLpClaim'
 import useMyBalance from 'hooks/common/useMyBalance'
 import { LpLpSimulation } from 'logics/lpSimulator'
-import { ExtractPoolResponseType } from 'logics/pool'
+import { ExtractPoolResponseType } from 'hooks/query/pair/usePool'
 
 const StyledContainer = styled(View)``
 
