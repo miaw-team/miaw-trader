@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js'
 
 import { UTIL } from 'consts'
 import { LpSimulation } from 'types/lpSimulation'
-import { ExtractPoolResponseType } from 'hooks/query/pair/usePool'
+import { ExtractPoolResponseType } from './pool'
 
 const { microfy, demicrofy, toBn } = UTIL
 

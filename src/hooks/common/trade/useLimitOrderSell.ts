@@ -29,7 +29,7 @@ import useNetwork from '../useNetwork'
 
 export type UseLimitOrderSellReturn = {
   offerContractOrDenom: ContractAddr | TokenDenomEnum
-  askDenom: TokenDenomEnum
+  askDenom: ContractAddr | TokenDenomEnum
   offerTokenSymbol: string
   askTokenSymbol: string
 
@@ -62,7 +62,7 @@ const useLimitOrderSell = ({
   pairContract,
 }: {
   offerContractOrDenom: ContractAddr | TokenDenomEnum
-  askDenom: TokenDenomEnum
+  askDenom: ContractAddr | TokenDenomEnum
   offerTokenSymbol: string
   askTokenSymbol: string
   pairContract: ContractAddr
@@ -107,7 +107,10 @@ const useLimitOrderSell = ({
 
   const askAmount = useMemo(() => {
     if (offerAmount && askPrice) {
-      return UTIL.toBn(offerAmount).multipliedBy(askPrice).toString(10) as Token
+      return UTIL.toBn(offerAmount)
+        .multipliedBy(askPrice)
+        .dp(6)
+        .toString(10) as Token
     }
     return '0' as Token
   }, [offerAmount, askPrice])

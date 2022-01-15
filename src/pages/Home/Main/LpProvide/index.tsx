@@ -1,7 +1,7 @@
 import { ReactElement } from 'react'
 import styled from 'styled-components'
 
-import { COLOR, ASSET } from 'consts'
+import { COLOR, WHITELIST } from 'consts'
 
 import { AuthButton, Card, FormText, SelectTab } from 'components'
 import useRoute from 'hooks/common/useRoute'
@@ -9,9 +9,9 @@ import useRoute from 'hooks/common/useRoute'
 import {
   LpProvideTypeEnum,
   RoutePath,
-  TokenDenomEnum,
   TokenType,
   ContractAddr,
+  TokenKeyEnum,
 } from 'types'
 
 import useLpProvide from 'hooks/common/lpProvide/useLpProvide'
@@ -26,32 +26,33 @@ const StyledCard = styled(Card)`
 
 const LpProvide = ({
   token,
-  tradeBaseDenom,
+  tradeBase,
   pairContract,
   lpContract,
 }: {
   token: TokenType
-  tradeBaseDenom: TokenDenomEnum
+  tradeBase: TokenKeyEnum
   pairContract: ContractAddr
   lpContract: ContractAddr
 }): ReactElement => {
   const { insertRouteParam, routeParams } = useRoute<RoutePath.home>()
   const type = routeParams?.lpType || LpProvideTypeEnum.provide
-
+  const tradeBaseContract = WHITELIST.tokenInfo[tradeBase].contractOrDenom
+  const tradeBaseSymbol = WHITELIST.tokenInfo[tradeBase].symbol
   const lpProvideReturn = useLpProvide({
     pairContract,
     token_0_ContractOrDenom: token.contractOrDenom,
-    token_1_ContractOrDenom: tradeBaseDenom,
+    token_1_ContractOrDenom: tradeBaseContract,
     token_0_Symbol: token.symbol,
-    token_1_Symbol: ASSET.symbolOfDenom[tradeBaseDenom],
+    token_1_Symbol: tradeBaseSymbol,
   })
   const lpWithdrawReturn = useLpWithdraw({
     pairContract,
     lpContract,
     token_0_ContractOrDenom: token.contractOrDenom,
-    token_1_ContractOrDenom: tradeBaseDenom,
+    token_1_ContractOrDenom: tradeBaseContract,
     token_0_Symbol: token.symbol,
-    token_1_Symbol: ASSET.symbolOfDenom[tradeBaseDenom],
+    token_1_Symbol: tradeBaseSymbol,
   })
   const {
     onClickLpProvide,

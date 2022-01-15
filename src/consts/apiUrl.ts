@@ -22,10 +22,13 @@ const getDashboardLink = ({
 }
 
 const TERRASWAP_API = 'https://terraswap-graph.terra.dev/graphql'
+const COINHALL_API =
+  'https://api.coinhall.org/api/charts/terra/prices/historical'
 
 export default {
   getCoinhallLink,
   getDashboardLink,
   TERRASWAP_API,
   MIAW_API,
+  COINHALL_API,
 }

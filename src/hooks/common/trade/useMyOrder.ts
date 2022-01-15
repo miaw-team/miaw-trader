@@ -28,7 +28,7 @@ import _ from 'lodash'
 
 export type UseMyOrderReturn = {
   askTokenPrice: Token
-  forBuyDenom: TokenDenomEnum
+  forBuyDenom: ContractAddr | TokenDenomEnum
   toBuyContractOrDenom: ContractAddr | TokenDenomEnum
   tokenForBuySymbol: string
   tokenToBuySymbol: string
@@ -55,7 +55,7 @@ const useMyOrder = ({
   tokenToBuySymbol,
   pairContract,
 }: {
-  forBuyDenom: TokenDenomEnum
+  forBuyDenom: ContractAddr | TokenDenomEnum
   toBuyContractOrDenom: ContractAddr | TokenDenomEnum
   tokenForBuySymbol: string
   tokenToBuySymbol: string
@@ -74,7 +74,7 @@ const useMyOrder = ({
     token_0_ContractOrDenom: toBuyContractOrDenom,
   })
 
-  const askTokenPrice = UTIL.toBn(poolInfo.token_0_Price)
+  const askTokenPrice = UTIL.toBn(poolInfo?.token_0_Price)
     .dp(6)
     .toString(10) as Token
 

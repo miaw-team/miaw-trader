@@ -87,12 +87,7 @@ const Main = (): ReactElement => {
   useEffect(() => {
     if (selectedToken?.token) {
       const list = selectedToken.token.pairList
-      const astroportPair = list.find((x) => x.dex === DexEnum.astroport)
-      if (astroportPair) {
-        setSelectedPairToken({ ...selectedToken, pairType: astroportPair })
-      } else {
-        setSelectedPairToken({ ...selectedToken, pairType: list[0] })
-      }
+      setSelectedPairToken({ ...selectedToken, pairType: list[0] })
     }
   }, [selectedToken?.token])
 
@@ -132,13 +127,13 @@ const Main = (): ReactElement => {
               >
                 <Trade
                   token={selectedPairToken.token}
-                  tradeBaseDenom={selectedPairToken.pairType.denom}
+                  tradeBase={selectedPairToken.pairType.base}
                   pairContract={selectedPairToken.pairType.pair}
                   dex={selectedPairToken.pairType.dex}
                 />
                 <LpProvide
                   token={selectedPairToken.token}
-                  tradeBaseDenom={selectedPairToken.pairType.denom}
+                  tradeBase={selectedPairToken.pairType.base}
                   pairContract={selectedPairToken.pairType.pair}
                   lpContract={selectedPairToken.pairType.lp}
                 />

@@ -1,6 +1,58 @@
 import { TokenDenomEnum } from 'types'
 import { ContractAddr } from './contracts'
 
+export enum TokenKeyEnum {
+  MIAW = 'MIAW',
+  UST = 'UST',
+  Luna = 'Luna',
+  bLuna = 'bLuna',
+  TWD = 'TWD',
+  STT = 'STT',
+  LOTA = 'LOTA',
+  bETH = 'bETH',
+  ANC = 'ANC',
+  MIR = 'MIR',
+  mAAPL = 'mAAPL',
+  mABNB = 'mABNB',
+  mAMC = 'mAMC',
+  mAMD = 'mAMD',
+  mAMZN = 'mAMZN',
+  mBABA = 'mBABA',
+  mBTC = 'mBTC',
+  mCOIN = 'mCOIN',
+  mDOT = 'mDOT',
+  mETH = 'mETH',
+  mFB = 'mFB',
+  mGLXY = 'mGLXY',
+  mGME = 'mGME',
+  mGOOGL = 'mGOOGL',
+  mGS = 'mGS',
+  mIAU = 'mIAU',
+  mMSFT = 'mMSFT',
+  mNFLX = 'mNFLX',
+  mQQQ = 'mQQQ',
+  mSLV = 'mSLV',
+  mSPY = 'mSPY',
+  mSQ = 'mSQ',
+  mTSLA = 'mTSLA',
+  mTWTR = 'mTWTR',
+  mUSO = 'mUSO',
+  mVIXY = 'mVIXY',
+  DPH = 'DPH',
+  MINE = 'MINE',
+  SPEC = 'SPEC',
+  VKR = 'VKR',
+  PSI = 'PSI',
+  KUJI = 'KUJI',
+  ALTE = 'ALTE',
+  ASTRO = 'ASTRO',
+  WHALE = 'WHALE',
+  APOLLO = 'APOLLO',
+  LUNI = 'LUNI',
+  TLAND = 'TLAND',
+  ORNE = 'ORNE',
+}
+
 export type AddressMap = {
   lotaToken: ContractAddr
   lotaUstPair: ContractAddr
@@ -8,13 +60,14 @@ export type AddressMap = {
 }
 
 export enum DexEnum {
-  terraswap = 'terraswap',
-  astroport = 'astroport',
+  terraswap = 'Terraswap',
+  astroport = 'Astroport',
+  loop = 'Loop',
 }
 
 export type PairType = {
   dex: DexEnum
-  denom: TokenDenomEnum
+  base: TokenKeyEnum
   pair: ContractAddr
   lp: ContractAddr
 }

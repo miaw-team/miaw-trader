@@ -34,7 +34,7 @@ import {
 } from 'logics/validator'
 
 export type UseBuyReturn = {
-  fromTokenContractOrDenom: TokenDenomEnum
+  fromTokenContractOrDenom: ContractAddr | TokenDenomEnum
   toTokenContractOrDenom: ContractAddr | TokenDenomEnum
   fromTokenSymbol: string
   toTokenSymbol: string
@@ -63,7 +63,7 @@ const useBuy = ({
   toTokenSymbol,
   pairContract,
 }: {
-  fromTokenContractOrDenom: TokenDenomEnum
+  fromTokenContractOrDenom: ContractAddr | TokenDenomEnum
   toTokenContractOrDenom: ContractAddr | TokenDenomEnum
   fromTokenSymbol: string
   toTokenSymbol: string

@@ -22,7 +22,7 @@ import useLpStakingInfo from 'hooks/common/lpTower/useLpStakingInfo'
 import useLpClaim from 'hooks/common/lpClaim/useLpClaim'
 import useMyBalance from 'hooks/common/useMyBalance'
 import { LpLpSimulation } from 'logics/lpSimulator'
-import { ExtractPoolResponseType } from 'hooks/query/pair/usePool'
+import { ExtractPoolResponseType } from 'logics/pool'
 
 const StyledContainer = styled(View)``
 
@@ -162,21 +162,25 @@ const LpStakingItem = ({
         <FormText fontType="B20" style={{ paddingLeft: 5 }}>
           {`My Lp : ${UTIL.formatAmount(myLpBalance)}`}
         </FormText>
-        <ConvertedValue
-          denomSymbol={denomSymbol}
-          tokenSymbol={tokenSymbol}
-          poolInfo={poolInfo}
-          lpToken={myLpBalance}
-        />
+        {poolInfo && (
+          <ConvertedValue
+            denomSymbol={denomSymbol}
+            tokenSymbol={tokenSymbol}
+            poolInfo={poolInfo}
+            lpToken={myLpBalance}
+          />
+        )}
         <FormText fontType="B20" style={{ paddingLeft: 5 }}>
           {`My Staked : ${UTIL.formatAmount(myLpStakedBalance)}`}
         </FormText>
-        <ConvertedValue
-          denomSymbol={denomSymbol}
-          tokenSymbol={tokenSymbol}
-          poolInfo={poolInfo}
-          lpToken={myLpStakedBalance}
-        />
+        {poolInfo && (
+          <ConvertedValue
+            denomSymbol={denomSymbol}
+            tokenSymbol={tokenSymbol}
+            poolInfo={poolInfo}
+            lpToken={myLpStakedBalance}
+          />
+        )}
 
         {UTIL.toBn(myLpReward).gt(0) && (
           <>

@@ -146,12 +146,14 @@ const useLpProvide = ({
 
   const dbcSimulateTokenAmount = useDebouncedCallback(
     async (nextUToken_0_Amount: uToken) => {
-      const simulation = await LpToken_0_Simulation({
-        poolInfo,
-        uToken_0: nextUToken_0_Amount,
-      })
-      setSimulation(simulation)
-      setToken_1_Amount(simulation?.token_1_Amount as Token)
+      if (poolInfo) {
+        const simulation = await LpToken_0_Simulation({
+          poolInfo,
+          uToken_0: nextUToken_0_Amount,
+        })
+        setSimulation(simulation)
+        setToken_1_Amount(simulation?.token_1_Amount as Token)
+      }
     },
     400
   )
@@ -167,12 +169,14 @@ const useLpProvide = ({
 
   const dbcSimulateUstAmount = useDebouncedCallback(
     async (nextUToken_1_Amount: uToken) => {
-      const simulation = await LpToken_1_Simulation({
-        poolInfo,
-        uToken_1: nextUToken_1_Amount,
-      })
-      setSimulation(simulation)
-      setToken_0_Amount(simulation?.token_0_Amount as Token)
+      if (poolInfo) {
+        const simulation = await LpToken_1_Simulation({
+          poolInfo,
+          uToken_1: nextUToken_1_Amount,
+        })
+        setSimulation(simulation)
+        setToken_0_Amount(simulation?.token_0_Amount as Token)
+      }
     },
     400
   )

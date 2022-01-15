@@ -134,28 +134,30 @@ const useLpWithdraw = ({
 
   const dbcSimulateLpTokenAmount = useDebouncedCallback(
     async (nextUlpTokenAmount: uLP) => {
-      const simulation = await LpLpSimulation({
-        poolInfo,
-        ulp: nextUlpTokenAmount,
-        userLpBalance: lpBal as uLP,
-      })
-      setSimulation(simulation)
+      if (poolInfo) {
+        const simulation = await LpLpSimulation({
+          poolInfo,
+          ulp: nextUlpTokenAmount,
+          userLpBalance: lpBal as uLP,
+        })
+        setSimulation(simulation)
 
-      let simulatedUusd
+        let simulatedUusd
 
-      if (token_0_ContractOrDenom === TokenDenomEnum.uusd) {
-        simulatedUusd = UTIL.microfy(
-          simulation.token_0_Amount || ('0' as Token)
-        ) as uUST
-      } else if (token_1_ContractOrDenom === TokenDenomEnum.uusd) {
-        simulatedUusd = UTIL.microfy(
-          simulation.token_1_Amount || ('0' as Token)
-        ) as uUST
-      }
+        if (token_0_ContractOrDenom === TokenDenomEnum.uusd) {
+          simulatedUusd = UTIL.microfy(
+            simulation.token_0_Amount || ('0' as Token)
+          ) as uUST
+        } else if (token_1_ContractOrDenom === TokenDenomEnum.uusd) {
+          simulatedUusd = UTIL.microfy(
+            simulation.token_1_Amount || ('0' as Token)
+          ) as uUST
+        }
 
-      if (simulatedUusd) {
-        const _tax = await getTax({ uusd: simulatedUusd })
-        setTax(_tax.amount.toString() as uUST)
+        if (simulatedUusd) {
+          const _tax = await getTax({ uusd: simulatedUusd })
+          setTax(_tax.amount.toString() as uUST)
+        }
       }
     },
     400

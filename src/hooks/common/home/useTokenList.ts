@@ -5,9 +5,9 @@ import { UTIL } from 'consts'
 
 import useNetwork from '../useNetwork'
 import usePoolList from 'hooks/query/pair/usePoolList'
-import useHistoricalDataForList from 'hooks/query/terraswap/useHistoricalDataForList'
-import { ContractAddr, DexEnum, TokenType } from 'types'
-import { ExtractPoolByTsResponseType } from 'logics/pool'
+import { TokenType } from 'types'
+import useHistoricalData from 'hooks/query/coinhall/useHistoricalData'
+import { ExtractPoolResponseType } from 'logics/pool'
 
 export enum SortTypeEnum {
   name = 'name',
@@ -19,12 +19,11 @@ export enum SortTypeEnum {
 export type SortedTokenType = {
   history?: {
     symbol: string
-    tokenPrice1ago: string
     isIncreased: boolean
     changePercent: string
   }
   token: TokenType
-  poolByTsInfo?: ExtractPoolByTsResponseType
+  poolInfo?: ExtractPoolResponseType
 }
 
 export type UseTokenListReturn = {
@@ -56,47 +55,52 @@ const useTokenList = (): UseTokenListReturn => {
     return whitelist
   }, [filter])
 
-  const tsPairContractList = useMemo(() => {
-    const list: {
-      symbol: string
-      tsPairContract: ContractAddr
-    }[] = []
-    _.forEach(filteredList, (token) => {
-      const tsPairContract = token.pairList.find(
-        (x) => x.dex === DexEnum.terraswap
-      )?.pair
-      if (tsPairContract) {
-        list.push({
-          symbol: token.symbol,
-          tsPairContract,
-        })
-      }
-    })
+  const targetPairContractList = useMemo(
+    () =>
+      _.map(filteredList, (token) => ({
+        symbol: token.symbol,
+        pair: token.pairList[0].pair,
+        tokenContractOrDenom: token.contractOrDenom,
+      })),
+    [filteredList]
+  )
 
-    return list
-  }, [filteredList])
-
-  const { historicalTokenPrice } = useHistoricalDataForList({
-    tsPairContractList,
+  const { historicalTokenPrice } = useHistoricalData({
+    pairContractList: targetPairContractList,
   })
 
   const { poolInfoList, refetch } = usePoolList({
-    pairContractList: tsPairContractList.map((x) => ({
-      symbol: x.symbol,
-      pair: x.tsPairContract,
-    })),
+    pairTypeList: targetPairContractList.map((x) => {
+      return {
+        symbol: x.symbol,
+        pairContract: x.pair,
+        token_0_ContractOrDenom: x.tokenContractOrDenom,
+      }
+    }),
   })
 
   const poolInfoListWithHistory = useMemo(() => {
-    if (false === isMainnet || historicalTokenPrice.length > 0) {
+    if (false === isMainnet || _.size(historicalTokenPrice) > 0) {
       return _.map(filteredList, (token) => {
         const symbol = token.symbol
-        const history = historicalTokenPrice.find((x) => x.symbol === symbol)
-        const poolByTsInfo = poolInfoList.find(
-          (x) => x.symbol === symbol
-        )?.poolByTsInfo
+        const historicalPrice =
+          historicalTokenPrice.find((x) => x.symbol === symbol)
+            ?.historicalPrice || 0
+        const poolInfo = poolInfoList.find((x) => x.symbol === symbol)?.poolInfo
 
-        return { token, history, poolByTsInfo }
+        let history
+        if (poolInfo && historicalPrice) {
+          const change = UTIL.getPriceChange({
+            from: UTIL.toBn(historicalPrice),
+            to: UTIL.toBn(poolInfo.token_0_Price),
+          })
+          history = {
+            symbol,
+            isIncreased: change.isIncreased,
+            changePercent: change.rate.multipliedBy(100).toFixed(2),
+          }
+        }
+        return { token, history, poolInfo }
       })
     }
     return []
@@ -113,8 +117,8 @@ const useTokenList = (): UseTokenListReturn => {
     } else if (sortBy === SortTypeEnum.price) {
       return poolInfoListWithHistory.sort((a, b) => {
         if (
-          UTIL.toBn(a.poolByTsInfo?.ustPricePerToken).gt(
-            b.poolByTsInfo?.ustPricePerToken || 0
+          UTIL.toBn(a.poolInfo?.token_0_Price).gt(
+            b.poolInfo?.token_0_Price || 0
           )
         ) {
           return sortDesc ? -1 : 1
@@ -124,8 +128,8 @@ const useTokenList = (): UseTokenListReturn => {
     } else if (sortBy === SortTypeEnum.poolSize) {
       return poolInfoListWithHistory.sort((a, b) => {
         if (
-          UTIL.toBn(a.poolByTsInfo?.ustPoolSize).gt(
-            b.poolByTsInfo?.ustPoolSize || 0
+          UTIL.toBn(a.poolInfo?.token_0_PoolSize).gt(
+            b.poolInfo?.token_0_PoolSize || 0
           )
         ) {
           return sortDesc ? -1 : 1

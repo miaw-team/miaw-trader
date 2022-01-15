@@ -109,7 +109,7 @@ const LimitOrderSellForm = ({
           <FormLabel>Price</FormLabel>
           <FormInput
             number
-            suffix={`per ${offerTokenSymbol}`}
+            suffix={askTokenSymbol}
             onChangeValue={(value): void => {
               updateAskPrice(value as Token)
             }}

@@ -2,7 +2,7 @@ import { ReactElement, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { IconSquare, IconCheckbox } from '@tabler/icons'
 
-import { ASSET, COLOR, STYLE } from 'consts'
+import { COLOR, STYLE, WHITELIST } from 'consts'
 
 import { FormText, Card, SelectTab, AuthButton, View } from 'components'
 import useRoute from 'hooks/common/useRoute'
@@ -20,9 +20,9 @@ import {
   TradeTypeEnum,
   RoutePath,
   TokenType,
-  TokenDenomEnum,
   ContractAddr,
   DexEnum,
+  TokenKeyEnum,
 } from 'types'
 
 import MyOrder from './MyOrder'
@@ -40,6 +40,7 @@ const StyledLayout = styled(View)<{ isLimitOrder: boolean }>`
   grid-template-columns: ${({ isLimitOrder }): string =>
     isLimitOrder ? '1fr 1fr' : '1fr'};
   column-gap: 20px;
+  height: 100%;
 
   @media ${STYLE.media.mobile} {
     display: flex;
@@ -223,54 +224,55 @@ const Sell = ({
 
 const Trade = ({
   token,
-  tradeBaseDenom,
+  tradeBase,
   pairContract,
   dex,
 }: {
   token: TokenType
-  tradeBaseDenom: TokenDenomEnum
+  tradeBase: TokenKeyEnum
   pairContract: ContractAddr
   dex: DexEnum
 }): ReactElement => {
   const { insertRouteParam, routeParams } = useRoute<RoutePath.home>()
   const tradeType = routeParams?.tradeType || TradeTypeEnum.buy
-
+  const tradeBaseContract = WHITELIST.tokenInfo[tradeBase].contractOrDenom
+  const tradeBaseSymbol = WHITELIST.tokenInfo[tradeBase].symbol
   const buyReturn = useBuy({
-    fromTokenContractOrDenom: tradeBaseDenom,
+    fromTokenContractOrDenom: tradeBaseContract,
     toTokenContractOrDenom: token.contractOrDenom,
-    fromTokenSymbol: ASSET.symbolOfDenom[tradeBaseDenom],
+    fromTokenSymbol: tradeBaseSymbol,
     toTokenSymbol: token.symbol,
     pairContract,
   })
 
   const useLimitOrderBuyReturn = useLimitOrderBuy({
-    offerDenom: tradeBaseDenom,
+    offerDenom: tradeBaseContract,
     askContractOrDenom: token.contractOrDenom,
-    offerTokenSymbol: ASSET.symbolOfDenom[tradeBaseDenom],
+    offerTokenSymbol: tradeBaseSymbol,
     askTokenSymbol: token.symbol,
     pairContract,
   })
 
   const sellReturn = useSell({
     fromTokenContractOrDenom: token.contractOrDenom,
-    toTokenContractOrDenom: tradeBaseDenom,
+    toTokenContractOrDenom: tradeBaseContract,
     fromTokenSymbol: token.symbol,
-    toTokenSymbol: ASSET.symbolOfDenom[tradeBaseDenom],
+    toTokenSymbol: tradeBaseSymbol,
     pairContract,
   })
 
   const useLimitOrderSellReturn = useLimitOrderSell({
     offerContractOrDenom: token.contractOrDenom,
-    askDenom: tradeBaseDenom,
+    askDenom: tradeBaseContract,
     offerTokenSymbol: token.symbol,
-    askTokenSymbol: ASSET.symbolOfDenom[tradeBaseDenom],
+    askTokenSymbol: tradeBaseSymbol,
     pairContract,
   })
 
   const myOrderReturn = useMyOrder({
-    forBuyDenom: tradeBaseDenom,
+    forBuyDenom: tradeBaseContract,
     toBuyContractOrDenom: token.contractOrDenom,
-    tokenForBuySymbol: ASSET.symbolOfDenom[tradeBaseDenom],
+    tokenForBuySymbol: tradeBaseSymbol,
     tokenToBuySymbol: token.symbol,
     pairContract,
   })

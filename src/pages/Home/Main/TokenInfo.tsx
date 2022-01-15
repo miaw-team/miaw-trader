@@ -13,10 +13,8 @@ import _ from 'lodash'
 
 import terraswapLogo from 'images/terraswap.svg'
 import astroportLogo from 'images/astroport.svg'
-import lunaLogo from 'images/whitelist/LUNA.svg'
-import ustLogo from 'images/whitelist/UST.svg'
 
-import { UTIL, STYLE, COLOR, APIURL, ASSET } from 'consts'
+import { UTIL, STYLE, COLOR, APIURL, WHITELIST } from 'consts'
 
 import { FormText, Card, FormImage, Row, LinkA, View } from 'components'
 import { DexEnum, PairType, TokenDenomEnum, TokenType } from 'types'
@@ -24,6 +22,7 @@ import useLayout from 'hooks/common/useLayout'
 
 import { SortedTokenType } from 'hooks/common/home/useTokenList'
 import usePool from 'hooks/query/pair/usePool'
+import useNetwork from 'hooks/common/useNetwork'
 
 const StyledContainer = styled(Card)``
 
@@ -95,7 +94,7 @@ const SwapBase = ({
         {_.map(pairList, (x, i) => {
           const dexSrc =
             x.dex === DexEnum.terraswap ? terraswapLogo : astroportLogo
-          const denomSrc = x.denom === TokenDenomEnum.uluna ? lunaLogo : ustLogo
+          const denomSrc = WHITELIST.tokenInfo[x.base].logo
           const selected = pairType.pair === x.pair
           return (
             <StyledDexDenomItem
@@ -146,14 +145,14 @@ const TokenPrice = ({
   pairType: PairType
 }): ReactElement => {
   const pairContract = pairType.pair
-  const tradeBaseDenom = pairType.denom
-
+  const tradeBaseContract = WHITELIST.tokenInfo[pairType.base].contractOrDenom
+  const { getSymbolByContractOrDenom } = useNetwork()
   const { poolInfo } = usePool({
     pairContract,
     token_0_ContractOrDenom: token.contractOrDenom,
   })
 
-  const { token_0_Price } = poolInfo
+  const token_0_Price = poolInfo?.token_0_Price
 
   const change1d = useMemo(() => {
     if (history) {
@@ -176,8 +175,10 @@ const TokenPrice = ({
 
   return (
     <Row style={{ alignItems: 'center', paddingRight: 10 }}>
-      <FormText fontType="B20">{`${displayPrice} ${ASSET.symbolOfDenom[tradeBaseDenom]}`}</FormText>
-      {tradeBaseDenom === TokenDenomEnum.uusd && (
+      <FormText fontType="B20">{`${displayPrice} ${getSymbolByContractOrDenom(
+        tradeBaseContract
+      )}`}</FormText>
+      {tradeBaseContract === TokenDenomEnum.uusd && (
         <FormText
           fontType="B16"
           color={change1d.isIncreased ? COLOR.success : COLOR.error}

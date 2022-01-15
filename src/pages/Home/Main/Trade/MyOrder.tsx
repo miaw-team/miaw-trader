@@ -46,7 +46,7 @@ const MyOrder = ({
       <StyledOrderList>
         {limitOrderList.length > 0 ? (
           <Row style={{ borderBottom: `1px solid ${COLOR.gray._300}` }}>
-            <View style={{ alignItems: 'center', paddingLeft: 10 }}>
+            <View style={{ alignItems: 'center' }}>
               <FormText fontType="B18">Type</FormText>
             </View>
             <View style={{ flex: 1, alignItems: 'center' }}>
@@ -75,7 +75,6 @@ const MyOrder = ({
                 style={{
                   justifyContent: 'center',
                   alignItems: 'center',
-                  paddingLeft: 10,
                 }}
               >
                 <FormText
@@ -91,7 +90,9 @@ const MyOrder = ({
                   alignItems: 'center',
                 }}
               >
-                <FormText>{UTIL.setComma(item.price)}</FormText>
+                <FormText>
+                  {UTIL.formatAmount(UTIL.microfy(item.price), { toFix: 6 })}
+                </FormText>
               </View>
               <View style={{ flex: 1, alignItems: 'center' }}>
                 <FormText>{`${UTIL.formatAmount(

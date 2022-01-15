@@ -7,7 +7,6 @@ import {
   ContractAddr,
   CW20,
   SayOptionEnum,
-  TokenDenomEnum,
   TokenType,
   uCW20,
   uToken,
@@ -165,9 +164,7 @@ const useSayMiaw = ({
   const { tokenInfo } = useCw20Info({ token: miawToken.contractOrDenom })
 
   const { poolInfo } = usePool({
-    pairContract: miawToken.pairList.find(
-      (x) => x.denom === TokenDenomEnum.uusd
-    )?.pair,
+    pairContract: miawToken.pairList[0].pair,
     token_0_ContractOrDenom: miawToken.contractOrDenom,
   })
   const burnedAmount = useMemo(() => {
@@ -178,9 +175,11 @@ const useSayMiaw = ({
   }, [tokenInfo?.total_supply])
 
   const burnedPrice = useMemo(() => {
-    const price = UTIL.toBn(burnedAmount).multipliedBy(poolInfo.token_0_Price)
+    const price = UTIL.toBn(burnedAmount).multipliedBy(
+      poolInfo?.token_0_Price || 0
+    )
     return price.toString(10) as uCW20
-  }, [burnedAmount, poolInfo.token_0_Price])
+  }, [burnedAmount, poolInfo?.token_0_Price])
 
   const [burnOption, setBurnOption] = useState<SayOptionEnum>(
     memoOptions[0].value

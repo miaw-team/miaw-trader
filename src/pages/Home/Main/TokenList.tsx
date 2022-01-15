@@ -21,7 +21,7 @@ import {
   UseTokenListReturn,
 } from 'hooks/common/home/useTokenList'
 import useFavoriteToken from 'hooks/common/useFavoriteToken'
-import { ExtractPoolByTsResponseType } from 'logics/pool'
+import { ExtractPoolResponseType } from 'logics/pool'
 
 const StyledCard = styled(Card)`
   width: 400px;
@@ -40,10 +40,12 @@ const StyledSort = styled(View)`
   ${STYLE.clickable}
 `
 
-const StyledTokenItem = styled(Row)`
+const StyledTokenItem = styled(View)`
   ${STYLE.clickable}
   padding:10px 0;
   align-items: center;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr 1fr;
 `
 
 const StyledTokenItemBox = styled(View)`
@@ -58,15 +60,15 @@ const StyledTokenItemBox = styled(View)`
 const TokenItem = ({
   token,
   history,
-  poolByTsInfo,
+  poolInfo,
   closeModal,
 }: {
   token: TokenType<ContractAddr | TokenDenomEnum>
   history?: SortedTokenType['history']
-  poolByTsInfo: ExtractPoolByTsResponseType
+  poolInfo: ExtractPoolResponseType
   closeModal?: () => void
 }): ReactElement => {
-  const { tokenPricePerUst, ustPoolSize } = poolByTsInfo
+  const { token_0_Price, token_1_PoolSize } = poolInfo
   const { insertRouteParam } = useRoute<RoutePath.home>()
 
   const { addFavoriteList, removeFavoriteList, favoriteList } =
@@ -74,31 +76,31 @@ const TokenItem = ({
 
   const isFavorite = favoriteList.includes(token.symbol)
 
-  const displayPricePerUst = useMemo(() => {
-    const tokenPricePerUstBn = UTIL.toBn(tokenPricePerUst)
-    if (tokenPricePerUstBn.isLessThan(0.01)) {
-      return tokenPricePerUstBn.toFixed(6)
+  const displayPrice = useMemo(() => {
+    const token_0_PriceBn = UTIL.toBn(token_0_Price)
+    if (token_0_PriceBn.isLessThan(0.01)) {
+      return token_0_PriceBn.toFixed(6)
     }
-    return tokenPricePerUstBn.toFixed(3)
-  }, [tokenPricePerUst])
+    return token_0_PriceBn.toFixed(3)
+  }, [token_0_Price])
 
   const displayUstPoolSize = useMemo(() => {
-    const bn = UTIL.toBn(ustPoolSize as string)
+    const bn = UTIL.toBn(token_1_PoolSize as string)
 
     return UTIL.formatAmount(bn.multipliedBy(2).toString() as uToken, {
       abbreviate: true,
       toFix: 0,
     })
-  }, [ustPoolSize])
+  }, [token_1_PoolSize])
 
   const getPoolSizeSafty = useMemo(() => {
-    const bn = UTIL.toBn(ustPoolSize as string)
+    const bn = UTIL.toBn(token_1_PoolSize as string)
     return bn.isLessThan(1000 * 1e6)
       ? COLOR.error
       : bn.isLessThan(100 * 1000 * 1e6)
       ? COLOR.warning
       : COLOR.gray._600
-  }, [ustPoolSize])
+  }, [token_1_PoolSize])
 
   const change1d = useMemo(() => {
     if (history) {
@@ -143,11 +145,13 @@ const TokenItem = ({
           {token.symbol}
         </FormText>
       </Row>
-      <View style={{ flex: 1, alignItems: 'flex-end' }}>
+      <Row
+        style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end' }}
+      >
         <FormText fontType="B16" color={COLOR.gray._600}>
-          {displayPricePerUst}
+          {displayPrice}
         </FormText>
-      </View>
+      </Row>
       <View style={{ flex: 1, alignItems: 'flex-end' }}>
         <FormText
           fontType="B16"
@@ -279,11 +283,11 @@ const TokenList = ({
       </StyledListHeader>
       <StyledTokenItemBox>
         {_.map(favoriteSortedList.concat(remainSortedList), (item, index) => {
-          if (item.poolByTsInfo) {
+          if (item.poolInfo) {
             return (
               <TokenItem
                 key={`sortedList-${index}`}
-                poolByTsInfo={item.poolByTsInfo}
+                poolInfo={item.poolInfo}
                 token={item.token}
                 history={item.history}
                 closeModal={closeModal}

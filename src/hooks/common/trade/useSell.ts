@@ -35,7 +35,7 @@ import {
 
 export type UseSellReturn = {
   fromTokenContractOrDenom: ContractAddr | TokenDenomEnum
-  toTokenContractOrDenom: TokenDenomEnum
+  toTokenContractOrDenom: ContractAddr | TokenDenomEnum
   fromTokenSymbol: string
   toTokenSymbol: string
 
@@ -66,7 +66,7 @@ const useSell = ({
   pairContract,
 }: {
   fromTokenContractOrDenom: ContractAddr | TokenDenomEnum
-  toTokenContractOrDenom: TokenDenomEnum
+  toTokenContractOrDenom: ContractAddr | TokenDenomEnum
   fromTokenSymbol: string
   toTokenSymbol: string
   pairContract: ContractAddr

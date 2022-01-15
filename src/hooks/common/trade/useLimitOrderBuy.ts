@@ -30,7 +30,7 @@ import usePool from 'hooks/query/pair/usePool'
 
 export type UseLimitOrderBuyReturn = {
   askTokenPrice: Token
-  offerDenom: TokenDenomEnum
+  offerDenom: ContractAddr | TokenDenomEnum
   askContractOrDenom: ContractAddr | TokenDenomEnum
   offerTokenSymbol: string
   askTokenSymbol: string
@@ -64,7 +64,7 @@ const useLimitOrderBuy = ({
   askTokenSymbol,
   pairContract,
 }: {
-  offerDenom: TokenDenomEnum
+  offerDenom: ContractAddr | TokenDenomEnum
   askContractOrDenom: ContractAddr | TokenDenomEnum
   offerTokenSymbol: string
   askTokenSymbol: string
@@ -91,7 +91,7 @@ const useLimitOrderBuy = ({
     token_0_ContractOrDenom: askContractOrDenom,
   })
 
-  const askTokenPrice = UTIL.toBn(poolInfo.token_0_Price)
+  const askTokenPrice = UTIL.toBn(poolInfo?.token_0_Price)
     .dp(6)
     .toString(10) as Token
 
@@ -117,7 +117,10 @@ const useLimitOrderBuy = ({
 
   const offerAmount = useMemo(() => {
     if (askAmount && askPrice) {
-      return UTIL.toBn(askAmount).multipliedBy(askPrice).toString(10) as Token
+      return UTIL.toBn(askAmount)
+        .multipliedBy(askPrice)
+        .dp(6)
+        .toString(10) as Token
     }
     return '0' as Token
   }, [askAmount, askPrice])

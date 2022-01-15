@@ -10,6 +10,7 @@ import {
   Token,
   TradeTypeEnum,
   LpProvideTypeEnum,
+  uToken,
 } from 'types'
 
 import { FormImage, View, Row, Card, FormText, Button } from 'components'
@@ -100,6 +101,9 @@ const LpOfLpItem = ({
 
   useEffect(() => {
     if (
+      poolInfo &&
+      poolInfoOfToken_0 &&
+      poolInfoOfToken_1 &&
       +poolInfo.totalShare > 0 &&
       +poolInfoOfToken_0.totalShare > 0 &&
       +poolInfoOfToken_1.totalShare > 0
@@ -233,7 +237,9 @@ const LpOfLpItem = ({
         </Row>
         <View>
           <FormText fontType="R16">
-            {`- PoolSize : ${UTIL.formatAmount(poolInfo.token_0_PoolSize)} LP`}
+            {`- PoolSize : ${UTIL.formatAmount(
+              poolInfo?.token_0_PoolSize || ('0' as uToken)
+            )} LP`}
           </FormText>
         </View>
       </StyledLpBox>
@@ -268,7 +274,9 @@ const LpOfLpItem = ({
         </Row>
         <View>
           <FormText fontType="R16">
-            {`- PoolSize : ${UTIL.formatAmount(poolInfo.token_1_PoolSize)} LP`}
+            {`- PoolSize : ${UTIL.formatAmount(
+              poolInfo?.token_1_PoolSize as uToken
+            )} LP`}
           </FormText>
         </View>
       </StyledLpBox>

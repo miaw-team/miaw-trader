@@ -53,9 +53,9 @@ const useTxInfo = (): {
       timeout = setTimeout(() => {
         setPostTxResult({
           status: PostTxStatus.ERROR,
-          error: 'Could not get TxInfo for 20 seconds',
+          error: 'Could not get TxInfo for 40 seconds',
         })
-      }, 1000 * 20)
+      }, 1000 * 40)
     }
 
     return (): void => {

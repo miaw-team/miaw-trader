@@ -102,7 +102,8 @@ const SimulateLpAmount = ({
     token_0_ContractOrDenom,
   })
 
-  const { token_0_Amount = '0' as Token, token_1_Amount = '0' as Token } =
+  const simulated =
+    poolInfo &&
     LpLpSimulation({
       poolInfo,
       ulp: inputLp as uLP,
@@ -110,8 +111,12 @@ const SimulateLpAmount = ({
     })
 
   const formatLp = UTIL.formatAmount(inputLp)
-  const formatToken_0 = UTIL.formatAmount(UTIL.microfy(token_0_Amount))
-  const formatToken_1 = UTIL.formatAmount(UTIL.microfy(token_1_Amount))
+  const formatToken_0 = UTIL.formatAmount(
+    UTIL.microfy(simulated?.token_0_Amount || ('0' as Token))
+  )
+  const formatToken_1 = UTIL.formatAmount(
+    UTIL.microfy(simulated?.token_1_Amount || ('0' as Token))
+  )
 
   return (
     <Row style={{ paddingTop: 5, paddingBottom: 10 }}>
@@ -199,6 +204,10 @@ const Analytics = ({
       ],
     }
   }, [analyticsList])
+
+  if (analyticsList.length < 1) {
+    return <View />
+  }
 
   return (
     <StyledContainer>

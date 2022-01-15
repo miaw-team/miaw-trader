@@ -1,66 +1,66 @@
-import { useMemo } from 'react'
 import _ from 'lodash'
 
 import useLCD from '../useLCD'
-import { QueryKeyEnum, terraswap, uToken, ContractAddr } from 'types'
-import useReactQuery from 'hooks/common/useReactQuery'
 import {
-  ExtractPoolByTsResponseType,
-  poolByTsResponseParser,
-} from 'logics/pool'
+  QueryKeyEnum,
+  terraswap,
+  uToken,
+  ContractAddr,
+  TokenDenomEnum,
+} from 'types'
+import useReactQuery from 'hooks/common/useReactQuery'
+import useSimulate from '../token/useSimulate'
+import { ExtractPoolResponseType, poolResponseParser } from 'logics/pool'
 
-export type UsePoolListReturn = {
+export type UsePoolReturn = {
   poolInfoList: {
     symbol: string
-    poolByTsInfo: ExtractPoolByTsResponseType
+    poolInfo: ExtractPoolResponseType
   }[]
   refetch: () => void
 }
 
 const usePoolList = ({
-  pairContractList,
+  pairTypeList,
 }: {
-  pairContractList: { symbol: string; pair: ContractAddr }[]
-}): UsePoolListReturn => {
+  pairTypeList: {
+    symbol: string
+    pairContract: ContractAddr
+    token_0_ContractOrDenom: ContractAddr | TokenDenomEnum
+  }[]
+}): UsePoolReturn => {
+  const { simulate } = useSimulate()
   const { wasmFetch } = useLCD()
-  const { data, refetch } = useReactQuery(
-    [QueryKeyEnum.POOL_LIST, pairContractList],
-    () =>
-      Promise.all(
-        _.map(pairContractList, async (item) => {
-          let ustFetchData: terraswap.PoolResponse<uToken> | undefined =
-            undefined
-          if (item) {
-            ustFetchData = await wasmFetch<
-              terraswap.Pool,
-              terraswap.PoolResponse<uToken>
-            >({
-              contract: item.pair,
-              msg: {
-                pool: {},
-              },
-            })
-          }
+  const { data: poolInfoList = [], refetch } = useReactQuery(
+    [QueryKeyEnum.POOL, pairTypeList],
+    async () => {
+      return Promise.all(
+        _.map(pairTypeList, async (item) => {
+          const poolResponse = await wasmFetch<
+            terraswap.Pool,
+            terraswap.PoolResponse<uToken>
+          >({
+            contract: item.pairContract,
+            msg: { pool: {} },
+          })
 
+          const poolInfo = await poolResponseParser({
+            poolResponse,
+            pairContract: item.pairContract,
+            simulate,
+            token_0_ContractOrDenom: item.token_0_ContractOrDenom,
+          })
           return {
             symbol: item.symbol,
-            ustFetchData,
+            poolInfo,
           }
         })
-      ),
+      )
+    },
     {
-      refetchInterval: 1000 * 15,
+      enabled: pairTypeList.length > 0,
     }
   )
-
-  const poolInfoList = useMemo(() => {
-    return _.map(data, (item) => {
-      return {
-        symbol: item.symbol,
-        poolByTsInfo: poolByTsResponseParser(item.ustFetchData),
-      }
-    })
-  }, [data])
 
   return { poolInfoList, refetch }
 }
