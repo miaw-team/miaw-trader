@@ -128,8 +128,8 @@ const useTokenList = (): UseTokenListReturn => {
     } else if (sortBy === SortTypeEnum.poolSize) {
       return poolInfoListWithHistory.sort((a, b) => {
         if (
-          UTIL.toBn(a.poolInfo?.token_0_PoolSize).gt(
-            b.poolInfo?.token_0_PoolSize || 0
+          UTIL.toBn(a.poolInfo?.token_1_PoolSize).gt(
+            b.poolInfo?.token_1_PoolSize || 0
           )
         ) {
           return sortDesc ? -1 : 1
