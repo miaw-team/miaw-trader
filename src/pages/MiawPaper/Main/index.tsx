@@ -81,9 +81,9 @@ const Main = (): ReactElement => {
           <StyledDesc>
             {'- 15% LP Staking reward. 5years, 5M>4M>3M>2M>1M'}
           </StyledDesc>
-          <StyledDesc>{'- 8% Community funds'}</StyledDesc>
+          <StyledDesc>{'- 11% Community funds'}</StyledDesc>
           <StyledDesc>{'- 4% Lp Supply'}</StyledDesc>
-          <StyledDesc>{'- 3% Team'}</StyledDesc>
+          <StyledDesc>{'- 1% Team'}</StyledDesc>
           <StyledDesc>{'- 70% burned'}</StyledDesc>
         </StyledSection>
 
@@ -109,7 +109,7 @@ const Main = (): ReactElement => {
             <IconSquarePlus color={COLOR.success} /> NFT Trader
           </StyledDesc>
           <StyledDesc>
-            <IconSquare color={COLOR.gray._900} /> Any interesting ideas{' '}
+            <IconSquare color={COLOR.gray._900} /> Any interesting ideas
           </StyledDesc>
         </StyledSection>
 
