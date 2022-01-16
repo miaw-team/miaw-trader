@@ -5,28 +5,23 @@ import { UTIL } from 'consts'
 
 import useNetwork from '../useNetwork'
 import usePoolList from 'hooks/query/pair/usePoolList'
-import { TokenType } from 'types'
-import useHistoricalData from 'hooks/query/coinhall/useHistoricalData'
+import { TokenInfoGoupEnum, TokenType } from 'types'
 import { ExtractPoolResponseType } from 'logics/pool'
 
 export enum SortTypeEnum {
   name = 'name',
   price = 'price',
   poolSize = 'poolSize',
-  change = 'change',
 }
 
 export type SortedTokenType = {
-  history?: {
-    symbol: string
-    isIncreased: boolean
-    changePercent: string
-  }
   token: TokenType
   poolInfo?: ExtractPoolResponseType
 }
 
 export type UseTokenListReturn = {
+  groupFilter: TokenInfoGoupEnum[]
+  setGroupFilter: React.Dispatch<React.SetStateAction<TokenInfoGoupEnum[]>>
   filter: string
   setFilter: (value: string) => void
   sortBy: SortTypeEnum
@@ -39,12 +34,14 @@ export type UseTokenListReturn = {
 const useTokenList = (): UseTokenListReturn => {
   const { whitelist, isMainnet } = useNetwork()
   const [filter, setFilter] = useState('')
+  const [groupFilter, setGroupFilter] = useState<TokenInfoGoupEnum[]>([])
   const [sortBy, setSortBy] = useState<SortTypeEnum>(SortTypeEnum.poolSize)
   const [sortDesc, setSortDesc] = useState<boolean>(true)
 
   const filteredList = useMemo(() => {
+    let list = whitelist
     if (filter) {
-      return whitelist.filter((x) => {
+      list = list.filter((x) => {
         const lowerFilter = filter.toLowerCase()
         return (
           x.symbol.toLowerCase().includes(lowerFilter) ||
@@ -52,8 +49,13 @@ const useTokenList = (): UseTokenListReturn => {
         )
       })
     }
-    return whitelist
-  }, [filter])
+
+    if (groupFilter.length > 0) {
+      list = list.filter((x) => x.group && groupFilter.includes(x.group))
+    }
+
+    return list
+  }, [filter, groupFilter])
 
   const targetPairContractList = useMemo(
     () =>
@@ -64,10 +66,6 @@ const useTokenList = (): UseTokenListReturn => {
       })),
     [filteredList]
   )
-
-  const { historicalTokenPrice } = useHistoricalData({
-    pairContractList: targetPairContractList,
-  })
 
   const { poolInfoList, refetch } = usePoolList({
     pairTypeList: targetPairContractList.map((x) => {
@@ -80,31 +78,17 @@ const useTokenList = (): UseTokenListReturn => {
   })
 
   const poolInfoListWithHistory = useMemo(() => {
-    if (false === isMainnet || _.size(historicalTokenPrice) > 0) {
+    if (false === isMainnet || poolInfoList.length > 0) {
       return _.map(filteredList, (token) => {
         const symbol = token.symbol
-        const historicalPrice =
-          historicalTokenPrice.find((x) => x.symbol === symbol)
-            ?.historicalPrice || 0
+
         const poolInfo = poolInfoList.find((x) => x.symbol === symbol)?.poolInfo
 
-        let history
-        if (poolInfo && historicalPrice) {
-          const change = UTIL.getPriceChange({
-            from: UTIL.toBn(historicalPrice),
-            to: UTIL.toBn(poolInfo.token_0_Price),
-          })
-          history = {
-            symbol,
-            isIncreased: change.isIncreased,
-            changePercent: change.rate.multipliedBy(100).toFixed(2),
-          }
-        }
-        return { token, history, poolInfo }
+        return { token, poolInfo }
       })
     }
     return []
-  }, [historicalTokenPrice, poolInfoList])
+  }, [poolInfoList])
 
   const sortedList = useMemo(() => {
     if (sortBy === SortTypeEnum.name) {
@@ -136,21 +120,6 @@ const useTokenList = (): UseTokenListReturn => {
         }
         return sortDesc ? 1 : -1
       })
-    } else if (sortBy === SortTypeEnum.change) {
-      return poolInfoListWithHistory.sort((a, b) => {
-        const aIsPositive = a.history?.isIncreased
-        const aVal = a.history?.changePercent || '0'
-        const aBn = UTIL.toBn(aIsPositive ? aVal : `-${aVal}`)
-
-        const bIsPositive = b.history?.isIncreased
-        const bVal = b.history?.changePercent || '0'
-        const bBn = UTIL.toBn(bIsPositive ? bVal : `-${bVal}`)
-
-        if (aBn.gt(bBn)) {
-          return sortDesc ? -1 : 1
-        }
-        return sortDesc ? 1 : -1
-      })
     }
     return []
   }, [poolInfoListWithHistory, sortBy, sortDesc])
@@ -161,6 +130,8 @@ const useTokenList = (): UseTokenListReturn => {
   }
 
   return {
+    groupFilter,
+    setGroupFilter,
     filter,
     setFilter,
     sortBy,

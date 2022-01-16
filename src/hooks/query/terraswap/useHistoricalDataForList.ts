@@ -44,19 +44,19 @@ export type UseHistoricalDataReturn = {
 }
 
 const useHistoricalDataForList = ({
-  tsPairContractList,
+  pairContractList,
 }: {
-  tsPairContractList: {
+  pairContractList: {
     symbol: string
-    tsPairContract: ContractAddr
+    pair: ContractAddr
   }[]
 }): UseHistoricalDataReturn => {
   const fetchHistory = async ({
     symbol,
-    tsPairContract,
+    pair,
   }: {
     symbol: string
-    tsPairContract: ContractAddr
+    pair: ContractAddr
   }): Promise<
     | {
         symbol: string
@@ -70,7 +70,7 @@ const useHistoricalDataForList = ({
     const aDayAgo = moment().subtract(1, 'day').subtract(1, 'hours').unix()
 
     const query = `query{
-      pair(pairAddress: "${tsPairContract}"){
+      pair(pairAddress: "${pair}"){
             token0{
               symbol
               tokenAddress
@@ -135,10 +135,10 @@ const useHistoricalDataForList = ({
   }
 
   const { data: historicalTokenPrice = [] } = useReactQuery(
-    [QueryKeyEnum.HISTORICAL_DATA, tsPairContractList],
+    [QueryKeyEnum.HISTORICAL_DATA, pairContractList],
     async () => {
       const list = await Promise.all(
-        _.map(tsPairContractList, async (item) => fetchHistory(item))
+        _.map(pairContractList, async (item) => fetchHistory(item))
       )
 
       const result: {
@@ -157,7 +157,7 @@ const useHistoricalDataForList = ({
       return result
     },
     {
-      enabled: tsPairContractList.length > 0,
+      enabled: pairContractList.length > 0,
     }
   )
 

@@ -21,11 +21,7 @@ export type UseBurnReturn = {
   invalidForm: boolean
 }
 
-const useBurn = ({
-  token,
-}: {
-  token: TokenType<ContractAddr>
-}): UseBurnReturn => {
+const useBurn = ({ token }: { token: TokenType }): UseBurnReturn => {
   const { balance: tokenBal } = useMyBalance({
     contractOrDenom: token.contractOrDenom,
   })
@@ -60,7 +56,7 @@ const useBurn = ({
     if (Number(amount) > 0) {
       msgs = fabricateBurn({
         sender: myAddress,
-        token: token.contractOrDenom,
+        token: token.contractOrDenom as ContractAddr,
         amount,
       })
     }

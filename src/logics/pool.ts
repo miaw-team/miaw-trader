@@ -11,6 +11,7 @@ import {
 
 export type ExtractPoolResponseType = {
   token_0_ContractOrDenom: TokenDenomEnum | ContractAddr
+  token_1_ContractOrDenom: TokenDenomEnum | ContractAddr
   pairContract: ContractAddr
   token_0_Price: Token
   token_1_Price: Token
@@ -57,11 +58,14 @@ export const poolResponseParser = async ({
       _.get(x.info, 'token.contract_addr') === token_0_ContractOrDenom
   )
 
+  const token_1 = poolResponse.assets[token_0_index === 0 ? 1 : 0]
   const token_0_PoolSize = poolResponse.assets[token_0_index].amount
-  const token_1_PoolSize =
-    poolResponse.assets[token_0_index === 0 ? 1 : 0].amount
+  const token_1_PoolSize = token_1.amount
   return {
     token_0_ContractOrDenom,
+    token_1_ContractOrDenom:
+      _.get(token_1.info, 'native_token.denom') ||
+      _.get(token_1.info, 'token.contract_addr'),
     pairContract,
     token_0_Price,
     token_1_Price,

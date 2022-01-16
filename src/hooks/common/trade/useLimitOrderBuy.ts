@@ -45,7 +45,7 @@ export type UseLimitOrderBuyReturn = {
   updateAskPrice: (value: Token) => void
   askPriceErrMsg: string
 
-  miawToken: TokenType<ContractAddr>
+  miawToken: TokenType
   miawAmount: Token
   setMiawAmount: (value: Token) => void
   miawAmountErrMsg: string

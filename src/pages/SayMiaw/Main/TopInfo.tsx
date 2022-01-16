@@ -6,7 +6,7 @@ import { COLOR, STYLE, UTIL } from 'consts'
 import { View, FormText, Row } from 'components'
 import useSayMiaw from 'hooks/common/sayMiaw/useSayMiaw'
 
-import { ContractAddr, TokenType } from 'types'
+import { TokenType } from 'types'
 import useMyBalance from 'hooks/common/useMyBalance'
 import useMyName from 'hooks/common/useMyName'
 
@@ -23,11 +23,7 @@ const StyledTotalBurnedBox = styled(Row)`
   }
 `
 
-const TopInfo = ({
-  miawToken,
-}: {
-  miawToken: TokenType<ContractAddr>
-}): ReactElement => {
+const TopInfo = ({ miawToken }: { miawToken: TokenType }): ReactElement => {
   const sayMiawReturn = useSayMiaw({ miawToken })
   const { name } = useMyName()
 

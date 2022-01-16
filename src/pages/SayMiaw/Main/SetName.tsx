@@ -6,7 +6,7 @@ import { COLOR, STYLE } from 'consts'
 
 import { View, Row, FormInput, AuthButton, FormText } from 'components'
 import useSetName from 'hooks/common/sayMiaw/useSetName'
-import { ContractAddr, TokenType } from 'types'
+import { TokenType } from 'types'
 
 const StyledContainer = styled(View)``
 
@@ -20,11 +20,7 @@ const StyledInputBox = styled(Row)`
   }
 `
 
-const SetName = ({
-  miawToken,
-}: {
-  miawToken: TokenType<ContractAddr>
-}): ReactElement => {
+const SetName = ({ miawToken }: { miawToken: TokenType }): ReactElement => {
   const { hasName, burnReturn, onClickSave, inputName, setInputName } =
     useSetName({
       miawToken,

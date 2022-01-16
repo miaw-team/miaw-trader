@@ -11,7 +11,7 @@ import useLayout from 'hooks/common/useLayout'
 
 import postTxStore from 'store/postTxStore'
 
-import { ContractAddr, PostTxStatus, TokenType } from 'types'
+import { PostTxStatus, TokenType } from 'types'
 
 import TopInfo from './TopInfo'
 import LeaderBoard from './LeaderBoard'
@@ -36,11 +36,7 @@ const StyledContentsLayout = styled(View)`
   }
 `
 
-const Contents = ({
-  miawToken,
-}: {
-  miawToken: TokenType<ContractAddr>
-}): ReactElement => {
+const Contents = ({ miawToken }: { miawToken: TokenType }): ReactElement => {
   const [showRanking, setShowRanking] = useState(false)
   const postTxResult = useRecoilValue(postTxStore.postTxResult)
   const sayMiawReturn = useSayMiaw({ miawToken })

@@ -17,10 +17,9 @@ import astroportLogo from 'images/astroport.svg'
 import { UTIL, STYLE, COLOR, APIURL, WHITELIST } from 'consts'
 
 import { FormText, Card, FormImage, Row, LinkA, View } from 'components'
-import { DexEnum, PairType, TokenDenomEnum, TokenType } from 'types'
+import { DexEnum, PairType, TokenType } from 'types'
 import useLayout from 'hooks/common/useLayout'
 
-import { SortedTokenType } from 'hooks/common/home/useTokenList'
 import usePool from 'hooks/query/pair/usePool'
 import useNetwork from 'hooks/common/useNetwork'
 
@@ -79,7 +78,6 @@ const SwapBase = ({
   setSelectedPairToken: React.Dispatch<
     React.SetStateAction<
       | {
-          history?: SortedTokenType['history']
           token: TokenType
           pairType: PairType
         }
@@ -136,11 +134,9 @@ const SwapBase = ({
 }
 
 const TokenPrice = ({
-  history,
   token,
   pairType,
 }: {
-  history?: SortedTokenType['history']
   token: TokenType
   pairType: PairType
 }): ReactElement => {
@@ -153,17 +149,6 @@ const TokenPrice = ({
   })
 
   const token_0_Price = poolInfo?.token_0_Price
-
-  const change1d = useMemo(() => {
-    if (history) {
-      return history
-    }
-
-    return {
-      isIncreased: false,
-      changePercent: '-',
-    }
-  }, [history])
 
   const displayPrice = useMemo(() => {
     const token_0_PriceBn = UTIL.toBn(token_0_Price)
@@ -178,32 +163,20 @@ const TokenPrice = ({
       <FormText fontType="B20">{`${displayPrice} ${getSymbolByContractOrDenom(
         tradeBaseContract
       )}`}</FormText>
-      {tradeBaseContract === TokenDenomEnum.uusd && (
-        <FormText
-          fontType="B16"
-          color={change1d.isIncreased ? COLOR.success : COLOR.error}
-        >
-          ({change1d.isIncreased ? '+' : '-'}
-          {change1d.changePercent}%)
-        </FormText>
-      )}
     </Row>
   )
 }
 
 const TokenInfo = ({
-  history,
   token,
   pairType,
   setSelectedPairToken,
 }: {
-  history?: SortedTokenType['history']
   token: TokenType
   pairType: PairType
   setSelectedPairToken: React.Dispatch<
     React.SetStateAction<
       | {
-          history?: SortedTokenType['history']
           token: TokenType
           pairType: PairType
         }
@@ -236,7 +209,7 @@ const TokenInfo = ({
               </FormText>
             )}
           </Row>
-          <TokenPrice history={history} token={token} pairType={pairType} />
+          <TokenPrice token={token} pairType={pairType} />
         </StyledSymbolPrice>
       </StyledTokenLogo>
       <StyledNameAddress>

@@ -49,18 +49,18 @@ import APOLLOLogo from 'images/whitelist/APOLLO.png'
 import LUNILogo from 'images/whitelist/LUNI.png'
 import TLANDLogo from 'images/whitelist/TLAND.png'
 import ORNELogo from 'images/whitelist/ORNE.png'
+import PLYLogo from 'images/whitelist/PLY.png'
+import tSHIBALogo from 'images/whitelist/tSHIBA.png'
 
-import { TokenKeyEnum, ContractAddr, TokenDenomEnum } from 'types'
-
-const tokenInfo: Record<
+import {
   TokenKeyEnum,
-  {
-    symbol: string
-    name: string
-    logo: string
-    contractOrDenom: ContractAddr | TokenDenomEnum
-  }
-> = {
+  ContractAddr,
+  TokenDenomEnum,
+  TokenInfoType,
+  TokenInfoGoupEnum,
+} from 'types'
+
+const tokenInfo: Record<TokenKeyEnum, TokenInfoType> = {
   [TokenKeyEnum.MIAW]: {
     symbol: 'MIAW',
     name: 'MIAW Token',
@@ -86,6 +86,7 @@ const tokenInfo: Record<
     logo: bLUNALogo,
     contractOrDenom:
       'terra1kc87mu460fwkqte29rquh4hc20m54fxwtsx7gp' as ContractAddr,
+    group: TokenInfoGoupEnum.anc,
   },
   [TokenKeyEnum.TWD]: {
     symbol: 'TWD',
@@ -114,6 +115,7 @@ const tokenInfo: Record<
     logo: bETHLogo,
     contractOrDenom:
       'terra1dzhzukyezv0etz22ud940z7adyv7xgcjkahuun' as ContractAddr,
+    group: TokenInfoGoupEnum.anc,
   },
   [TokenKeyEnum.ANC]: {
     symbol: 'ANC',
@@ -121,6 +123,7 @@ const tokenInfo: Record<
     logo: ANCLogo,
     contractOrDenom:
       'terra14z56l0fp2lsf86zy3hty2z47ezkhnthtr9yq76' as ContractAddr,
+    group: TokenInfoGoupEnum.anc,
   },
   [TokenKeyEnum.MIR]: {
     symbol: 'MIR',
@@ -128,6 +131,7 @@ const tokenInfo: Record<
     logo: MIRLogo,
     contractOrDenom:
       'terra15gwkyepfc6xgca5t5zefzwy42uts8l2m4g40k6' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mAAPL]: {
     symbol: 'mAAPL',
@@ -135,6 +139,7 @@ const tokenInfo: Record<
     logo: mAAPLLogo,
     contractOrDenom:
       'terra1vxtwu4ehgzz77mnfwrntyrmgl64qjs75mpwqaz' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mABNB]: {
     symbol: 'mABNB',
@@ -142,6 +147,7 @@ const tokenInfo: Record<
     logo: mABNBLogo,
     contractOrDenom:
       'terra1g4x2pzmkc9z3mseewxf758rllg08z3797xly0n' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mAMC]: {
     symbol: 'mAMC',
@@ -149,6 +155,7 @@ const tokenInfo: Record<
     logo: mAMCLogo,
     contractOrDenom:
       'terra1qelfthdanju7wavc5tq0k5r0rhsyzyyrsn09qy' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mAMD]: {
     symbol: 'mAMD',
@@ -156,6 +163,7 @@ const tokenInfo: Record<
     logo: mAMDLogo,
     contractOrDenom:
       'terra18ej5nsuu867fkx4tuy2aglpvqjrkcrjjslap3z' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mAMZN]: {
     symbol: 'mAMZN',
@@ -163,6 +171,7 @@ const tokenInfo: Record<
     logo: mAMZNLogo,
     contractOrDenom:
       'terra165nd2qmrtszehcfrntlplzern7zl4ahtlhd5t2' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mBABA]: {
     symbol: 'mBABA',
@@ -170,6 +179,7 @@ const tokenInfo: Record<
     logo: mBABALogo,
     contractOrDenom:
       'terra1w7zgkcyt7y4zpct9dw8mw362ywvdlydnum2awa' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mBTC]: {
     symbol: 'mBTC',
@@ -177,6 +187,7 @@ const tokenInfo: Record<
     logo: mBTCLogo,
     contractOrDenom:
       'terra1rhhvx8nzfrx5fufkuft06q5marfkucdqwq5sjw' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mCOIN]: {
     symbol: 'mCOIN',
@@ -184,6 +195,7 @@ const tokenInfo: Record<
     logo: mCOINLogo,
     contractOrDenom:
       'terra18wayjpyq28gd970qzgjfmsjj7dmgdk039duhph' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mDOT]: {
     symbol: 'mDOT',
@@ -191,6 +203,7 @@ const tokenInfo: Record<
     logo: mDOTLogo,
     contractOrDenom:
       'terra19ya4jpvjvvtggepvmmj6ftmwly3p7way0tt08r' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mETH]: {
     symbol: 'mETH',
@@ -198,6 +211,7 @@ const tokenInfo: Record<
     logo: mETHLogo,
     contractOrDenom:
       'terra1dk3g53js3034x4v5c3vavhj2738une880yu6kx' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mFB]: {
     symbol: 'mFB',
@@ -205,6 +219,7 @@ const tokenInfo: Record<
     logo: mFBLogo,
     contractOrDenom:
       'terra1mqsjugsugfprn3cvgxsrr8akkvdxv2pzc74us7' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mGLXY]: {
     symbol: 'mGLXY',
@@ -212,6 +227,7 @@ const tokenInfo: Record<
     logo: mGLXYLogo,
     contractOrDenom:
       'terra1l5lrxtwd98ylfy09fn866au6dp76gu8ywnudls' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mGME]: {
     symbol: 'mGME',
@@ -219,6 +235,7 @@ const tokenInfo: Record<
     logo: mGMELogo,
     contractOrDenom:
       'terra1m6j6j9gw728n82k78s0j9kq8l5p6ne0xcc820p' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mGOOGL]: {
     symbol: 'mGOOGL',
@@ -226,6 +243,7 @@ const tokenInfo: Record<
     logo: mGOOGLLogo,
     contractOrDenom:
       'terra1h8arz2k547uvmpxctuwush3jzc8fun4s96qgwt' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mGS]: {
     symbol: 'mGS',
@@ -233,6 +251,7 @@ const tokenInfo: Record<
     logo: mGSLogo,
     contractOrDenom:
       'terra137drsu8gce5thf6jr5mxlfghw36rpljt3zj73v' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mIAU]: {
     symbol: 'mIAU',
@@ -240,6 +259,7 @@ const tokenInfo: Record<
     logo: mIAULogo,
     contractOrDenom:
       'terra10h7ry7apm55h4ez502dqdv9gr53juu85nkd4aq' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mMSFT]: {
     symbol: 'mMSFT',
@@ -247,6 +267,7 @@ const tokenInfo: Record<
     logo: mMSFTLogo,
     contractOrDenom:
       'terra1227ppwxxj3jxz8cfgq00jgnxqcny7ryenvkwj6' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mNFLX]: {
     symbol: 'mNFLX',
@@ -254,6 +275,7 @@ const tokenInfo: Record<
     logo: mNFLXLogo,
     contractOrDenom:
       'terra1jsxngqasf2zynj5kyh0tgq9mj3zksa5gk35j4k' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mQQQ]: {
     symbol: 'mQQQ',
@@ -261,6 +283,7 @@ const tokenInfo: Record<
     logo: mQQQLogo,
     contractOrDenom:
       'terra1csk6tc7pdmpr782w527hwhez6gfv632tyf72cp' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mSLV]: {
     symbol: 'mSLV',
@@ -268,6 +291,7 @@ const tokenInfo: Record<
     logo: mSLVLogo,
     contractOrDenom:
       'terra1kscs6uhrqwy6rx5kuw5lwpuqvm3t6j2d6uf2lp' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mSPY]: {
     symbol: 'mSPY',
@@ -275,6 +299,7 @@ const tokenInfo: Record<
     logo: mSPYLogo,
     contractOrDenom:
       'terra1aa00lpfexyycedfg5k2p60l9djcmw0ue5l8fhc' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mSQ]: {
     symbol: 'mSQ',
@@ -282,6 +307,7 @@ const tokenInfo: Record<
     logo: mSQLogo,
     contractOrDenom:
       'terra1u43zu5amjlsgty5j64445fr9yglhm53m576ugh' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mTSLA]: {
     symbol: 'mTSLA',
@@ -289,6 +315,7 @@ const tokenInfo: Record<
     logo: mTSLALogo,
     contractOrDenom:
       'terra14y5affaarufk3uscy2vr6pe6w6zqf2wpjzn5sh' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mTWTR]: {
     symbol: 'mTWTR',
@@ -296,6 +323,7 @@ const tokenInfo: Record<
     logo: mTWTRLogo,
     contractOrDenom:
       'terra1cc3enj9qgchlrj34cnzhwuclc4vl2z3jl7tkqg' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mUSO]: {
     symbol: 'mUSO',
@@ -303,6 +331,7 @@ const tokenInfo: Record<
     logo: mUSOLogo,
     contractOrDenom:
       'terra1lvmx8fsagy70tv0fhmfzdw9h6s3sy4prz38ugf' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.mVIXY]: {
     symbol: 'mVIXY',
@@ -310,6 +339,7 @@ const tokenInfo: Record<
     logo: mVIXYLogo,
     contractOrDenom:
       'terra19cmt6vzvhnnnfsmccaaxzy2uaj06zjktu6yzjx' as ContractAddr,
+    group: TokenInfoGoupEnum.mirror,
   },
   [TokenKeyEnum.DPH]: {
     symbol: 'DPH',
@@ -397,14 +427,28 @@ const tokenInfo: Record<
   },
   [TokenKeyEnum.ORNE]: {
     symbol: 'ORNE',
-    name: 'TerraLand token',
+    name: 'Orne',
     logo: ORNELogo,
     contractOrDenom:
       'terra1hnezwjqlhzawcrfysczcxs6xqxu2jawn729kkf' as ContractAddr,
   },
+  [TokenKeyEnum.PLY]: {
+    symbol: 'PLY',
+    name: 'PlayNity token',
+    logo: PLYLogo,
+    contractOrDenom:
+      'terra13awdgcx40tz5uygkgm79dytez3x87rpg4uhnvu' as ContractAddr,
+  },
+  [TokenKeyEnum.tSHIBA]: {
+    symbol: 'tSHIBA',
+    name: 'Terra Shiba',
+    logo: tSHIBALogo,
+    contractOrDenom:
+      'terra140k6k2pmh2lmy4q4wyz5znqmtgwvs3gkgfeevq' as ContractAddr,
+  },
 }
 
-const mainnetTokenList: TokenType<ContractAddr | TokenDenomEnum>[] = [
+const mainnetTokenList: TokenType[] = [
   {
     ...tokenInfo[TokenKeyEnum.MIAW],
     pairList: [
@@ -990,6 +1034,28 @@ const mainnetTokenList: TokenType<ContractAddr | TokenDenomEnum>[] = [
         base: TokenKeyEnum.UST,
         pair: 'terra1mz0p4wzz5tmethu7rca2jjrw077hv2ypj7h06z' as ContractAddr,
         lp: 'terra1mxpq2xc6k7zasj4wmlz07x4wh9la8dqn3nrxja' as ContractAddr,
+      },
+    ],
+  },
+  {
+    ...tokenInfo[TokenKeyEnum.PLY],
+    pairList: [
+      {
+        dex: DexEnum.terraswap,
+        base: TokenKeyEnum.UST,
+        pair: 'terra19fjaurx28dq4wgnf9fv3qg0lwldcln3jqafzm6' as ContractAddr,
+        lp: 'terra1h69kvcmg8jnq7ph2r45k6md4afkl96ugg73amc' as ContractAddr,
+      },
+    ],
+  },
+  {
+    ...tokenInfo[TokenKeyEnum.tSHIBA],
+    pairList: [
+      {
+        dex: DexEnum.terraswap,
+        base: TokenKeyEnum.UST,
+        pair: 'terra1stdzf28wlq7llzfecse366r657rtdh6wtrdfk2' as ContractAddr,
+        lp: 'terra13cvk06h0e64y3x8c3ds3lts8pwfq955ypw08v5' as ContractAddr,
       },
     ],
   },

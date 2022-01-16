@@ -5,7 +5,7 @@ import { STYLE } from 'consts'
 
 import { Card, AuthButton } from 'components'
 
-import { ContractAddr, TokenType } from 'types'
+import { TokenType } from 'types'
 
 import useSend from 'hooks/common/useSend'
 
@@ -17,7 +17,7 @@ const StyledCard = styled(Card)`
   }
 `
 
-const Send = ({ token }: { token: TokenType<ContractAddr> }): ReactElement => {
+const Send = ({ token }: { token: TokenType }): ReactElement => {
   const sendProps = useSend({ token })
   const { onClickSend, invalidForm, fee } = sendProps
   return (

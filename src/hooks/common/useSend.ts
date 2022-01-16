@@ -31,11 +31,7 @@ export type UseSendReturn = {
   invalidForm: boolean
 }
 
-const useSend = ({
-  token,
-}: {
-  token: TokenType<ContractAddr>
-}): UseSendReturn => {
+const useSend = ({ token }: { token: TokenType }): UseSendReturn => {
   const { balance: tokenBal } = useMyBalance({
     contractOrDenom: token.contractOrDenom,
   })
@@ -82,7 +78,7 @@ const useSend = ({
     if (Number(amount) > 0) {
       msgs = fabricateSend({
         sender: myAddress,
-        token: token.contractOrDenom,
+        token: token.contractOrDenom as ContractAddr,
         amount,
         recipient: recipient as ContractAddr,
       })

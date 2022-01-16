@@ -1,27 +1,30 @@
 import { ReactElement, ReactNode, useMemo } from 'react'
 import styled from 'styled-components'
 import _ from 'lodash'
-import { IconChevronDown, IconChevronUp, IconX, IconStar } from '@tabler/icons'
+import {
+  IconChevronDown,
+  IconChevronUp,
+  IconX,
+  IconStar,
+  IconCheckbox,
+  IconSquare,
+} from '@tabler/icons'
+import ANCLogo from 'images/whitelist/ANC.png'
+import MIRLogo from 'images/whitelist/MIR.svg'
 
 import { COLOR, STYLE, UTIL } from 'consts'
 
 import { FormImage, FormText, Card, Row, View, FormInput } from 'components'
 
-import {
-  ContractAddr,
-  RoutePath,
-  TokenDenomEnum,
-  TokenType,
-  uToken,
-} from 'types'
+import { RoutePath, TokenInfoGoupEnum, TokenType, uToken } from 'types'
 import useRoute from 'hooks/common/useRoute'
 import {
-  SortedTokenType,
   SortTypeEnum,
   UseTokenListReturn,
 } from 'hooks/common/home/useTokenList'
 import useFavoriteToken from 'hooks/common/useFavoriteToken'
 import { ExtractPoolResponseType } from 'logics/pool'
+import useNetwork from 'hooks/common/useNetwork'
 
 const StyledCard = styled(Card)`
   width: 400px;
@@ -45,7 +48,7 @@ const StyledTokenItem = styled(View)`
   padding:10px 0;
   align-items: center;
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr 1fr;
+  grid-template-columns: 1fr 2fr 1fr;
 `
 
 const StyledTokenItemBox = styled(View)`
@@ -59,18 +62,16 @@ const StyledTokenItemBox = styled(View)`
 
 const TokenItem = ({
   token,
-  history,
   poolInfo,
   closeModal,
 }: {
-  token: TokenType<ContractAddr | TokenDenomEnum>
-  history?: SortedTokenType['history']
+  token: TokenType
   poolInfo: ExtractPoolResponseType
   closeModal?: () => void
 }): ReactElement => {
-  const { token_0_Price, token_1_PoolSize } = poolInfo
+  const { token_0_Price, token_1_PoolSize, token_1_ContractOrDenom } = poolInfo
   const { insertRouteParam } = useRoute<RoutePath.home>()
-
+  const { getSymbolByContractOrDenom } = useNetwork()
   const { addFavoriteList, removeFavoriteList, favoriteList } =
     useFavoriteToken()
 
@@ -84,6 +85,15 @@ const TokenItem = ({
     return token_0_PriceBn.toFixed(3)
   }, [token_0_Price])
 
+  const groupSrc = useMemo(() => {
+    if (token.group === TokenInfoGoupEnum.mirror) {
+      return MIRLogo
+    }
+    if (token.group === TokenInfoGoupEnum.anc) {
+      return ANCLogo
+    }
+  }, [token.group])
+
   const displayUstPoolSize = useMemo(() => {
     const bn = UTIL.toBn(token_1_PoolSize as string)
 
@@ -95,23 +105,16 @@ const TokenItem = ({
 
   const getPoolSizeSafty = useMemo(() => {
     const bn = UTIL.toBn(token_1_PoolSize as string)
-    return bn.isLessThan(1000 * 1e6)
+    return bn.gte(10 * 1000 * 1000 * 1e6)
+      ? COLOR.gray._600
+      : bn.gte(1000 * 1000 * 1e6)
+      ? COLOR.primary._600
+      : bn.lt(1000 * 1e6)
       ? COLOR.error
-      : bn.isLessThan(100 * 1000 * 1e6)
+      : bn.lt(100 * 1000 * 1e6)
       ? COLOR.warning
-      : COLOR.gray._600
+      : COLOR.primary._400
   }, [token_1_PoolSize])
-
-  const change1d = useMemo(() => {
-    if (history) {
-      return history
-    }
-
-    return {
-      isIncreased: false,
-      changePercent: '-',
-    }
-  }, [history])
 
   return (
     <StyledTokenItem
@@ -120,7 +123,7 @@ const TokenItem = ({
         closeModal && closeModal()
       }}
     >
-      <Row style={{ flex: 1, alignItems: 'center' }}>
+      <Row style={{ alignItems: 'center' }}>
         <IconStar
           fill={isFavorite ? COLOR.rainbow.yellow : 'none'}
           color={isFavorite ? COLOR.rainbow.yellow : COLOR.gray._400}
@@ -131,37 +134,41 @@ const TokenItem = ({
               : addFavoriteList({ symbol: token.symbol })
           }}
         />
-        <FormImage
-          src={token.logo}
-          size={20}
-          style={{
-            borderRadius: 15,
-            padding: 5,
-            marginLeft: 5,
-            marginRight: 5,
-          }}
-        />
+        <View style={{ position: 'relative' }}>
+          <FormImage
+            src={token.logo}
+            size={20}
+            style={{
+              borderRadius: 15,
+              padding: 5,
+              marginLeft: 5,
+              marginRight: 5,
+            }}
+          />
+          {groupSrc && (
+            <View style={{ position: 'absolute', right: -5, bottom: -5 }}>
+              <FormImage
+                src={groupSrc}
+                size={16}
+                style={{ borderRadius: '50%', border: '1px solid black' }}
+              />
+            </View>
+          )}
+        </View>
         <FormText fontType="B16" color={COLOR.primary._400}>
           {token.symbol}
         </FormText>
       </Row>
-      <Row
-        style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'flex-end' }}
-      >
+      <Row style={{ justifyContent: 'flex-end', alignItems: 'flex-end' }}>
         <FormText fontType="B16" color={COLOR.gray._600}>
           {displayPrice}
         </FormText>
-      </Row>
-      <View style={{ flex: 1, alignItems: 'flex-end' }}>
-        <FormText
-          fontType="B16"
-          color={change1d.isIncreased ? COLOR.success : COLOR.error}
-        >
-          {change1d.isIncreased ? '+' : '-'}
-          {change1d.changePercent}%
+        <FormText fontType="R14" color={COLOR.gray._600}>
+          {getSymbolByContractOrDenom(token_1_ContractOrDenom)}
         </FormText>
-      </View>
-      <View style={{ flex: 1, alignItems: 'center' }}>
+      </Row>
+
+      <View style={{ alignItems: 'center' }}>
         <FormText fontType="B16" color={getPoolSizeSafty}>
           {displayUstPoolSize}
         </FormText>
@@ -216,6 +223,42 @@ const SortTitle = ({
   )
 }
 
+const StyledGroupFilter = styled(Row)`
+  ${STYLE.clickable}
+  align-items: center;
+`
+
+const GroupFilter = ({
+  selected,
+  title,
+  group,
+  setGroupFilter,
+}: {
+  selected: boolean
+  title: string
+  group: TokenInfoGoupEnum
+  setGroupFilter: React.Dispatch<React.SetStateAction<TokenInfoGoupEnum[]>>
+}): ReactElement => {
+  return (
+    <StyledGroupFilter
+      onClick={(): void => {
+        setGroupFilter((ori) => {
+          if (selected) {
+            return ori.filter((x) => x !== group)
+          }
+
+          return ori.concat([group])
+        })
+      }}
+    >
+      {selected ? <IconCheckbox color={COLOR.primary._400} /> : <IconSquare />}
+      <FormText color={selected ? COLOR.primary._400 : COLOR.text}>
+        {title}
+      </FormText>
+    </StyledGroupFilter>
+  )
+}
+
 const TokenList = ({
   closeModal,
   tokenListReturn,
@@ -223,8 +266,16 @@ const TokenList = ({
   closeModal?: () => void
   tokenListReturn: UseTokenListReturn
 }): ReactElement => {
-  const { filter, setFilter, sortBy, sortDesc, sortedList, onClickSort } =
-    tokenListReturn
+  const {
+    filter,
+    setFilter,
+    sortBy,
+    sortDesc,
+    sortedList,
+    onClickSort,
+    groupFilter,
+    setGroupFilter,
+  } = tokenListReturn
 
   const { favoriteList } = useFavoriteToken()
 
@@ -247,6 +298,22 @@ const TokenList = ({
         </View>
         {closeModal && <IconX onClick={closeModal} size={24} />}
       </Row>
+      <Row style={{ justifyContent: 'flex-end', marginBottom: 10 }}>
+        <View style={{ paddingRight: 10 }}>
+          <GroupFilter
+            title="ANC"
+            selected={groupFilter.includes(TokenInfoGoupEnum.anc)}
+            group={TokenInfoGoupEnum.anc}
+            setGroupFilter={setGroupFilter}
+          />
+        </View>
+        <GroupFilter
+          title="MIRROR"
+          selected={groupFilter.includes(TokenInfoGoupEnum.mirror)}
+          group={TokenInfoGoupEnum.mirror}
+          setGroupFilter={setGroupFilter}
+        />
+      </Row>
       <StyledListHeader>
         <SortTitle
           title={'Token'}
@@ -267,13 +334,6 @@ const TokenList = ({
           onClickSort={onClickSort}
         />
         <SortTitle
-          title="Change"
-          sortBy={SortTypeEnum.change}
-          selectedSortBy={sortBy}
-          sortDesc={sortDesc}
-          onClickSort={onClickSort}
-        />
-        <SortTitle
           title={'TVL'}
           sortBy={SortTypeEnum.poolSize}
           selectedSortBy={sortBy}
@@ -289,7 +349,6 @@ const TokenList = ({
                 key={`sortedList-${index}`}
                 poolInfo={item.poolInfo}
                 token={item.token}
-                history={item.history}
                 closeModal={closeModal}
               />
             )

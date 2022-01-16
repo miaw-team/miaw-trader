@@ -5,7 +5,6 @@ import { BURN } from 'consts'
 
 import {
   burnMemoType,
-  ContractAddr,
   SayOptionEnum,
   TokenType,
   CW20,
@@ -28,7 +27,7 @@ export type UseSetNameReturn = {
 const useSetName = ({
   miawToken,
 }: {
-  miawToken: TokenType<ContractAddr>
+  miawToken: TokenType
 }): UseSetNameReturn => {
   const postTxResult = useRecoilValue(postTxStore.postTxResult)
 

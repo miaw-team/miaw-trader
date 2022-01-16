@@ -123,7 +123,7 @@ export const burnDataParser = ({
 const useSayMiaw = ({
   miawToken,
 }: {
-  miawToken: TokenType<ContractAddr>
+  miawToken: TokenType
 }): UseSayMiawReturn => {
   const memoOptions = [
     // {
@@ -161,7 +161,9 @@ const useSayMiaw = ({
   ]
 
   const burnReturn = useBurn({ token: miawToken })
-  const { tokenInfo } = useCw20Info({ token: miawToken.contractOrDenom })
+  const { tokenInfo } = useCw20Info({
+    token: miawToken.contractOrDenom as ContractAddr,
+  })
 
   const { poolInfo } = usePool({
     pairContract: miawToken.pairList[0].pair,

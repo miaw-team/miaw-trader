@@ -51,6 +51,8 @@ export enum TokenKeyEnum {
   LUNI = 'LUNI',
   TLAND = 'TLAND',
   ORNE = 'ORNE',
+  PLY = 'PLY',
+  tSHIBA = 'tSHIBA',
 }
 
 export type AddressMap = {
@@ -72,13 +74,20 @@ export type PairType = {
   lp: ContractAddr
 }
 
-export type TokenType<
-  T extends ContractAddr | TokenDenomEnum = ContractAddr | TokenDenomEnum
-> = {
+export enum TokenInfoGoupEnum {
+  mirror = 'mirror',
+  anc = 'anc',
+}
+
+export type TokenInfoType = {
   symbol: string
   name: string
   logo: string
-  contractOrDenom: T
+  contractOrDenom: ContractAddr | TokenDenomEnum
+  group?: TokenInfoGoupEnum
+}
+
+export type TokenType = TokenInfoType & {
   pairList: PairType[]
 }
 

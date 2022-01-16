@@ -10,7 +10,7 @@ import { DexEnum, PairType, RoutePath, TokenType } from 'types'
 
 import useRoute from 'hooks/common/useRoute'
 import useLayout from 'hooks/common/useLayout'
-import useTokenList, { SortedTokenType } from 'hooks/common/home/useTokenList'
+import useTokenList from 'hooks/common/home/useTokenList'
 
 import TokenInfo from './TokenInfo'
 import Trade from './Trade'
@@ -79,7 +79,6 @@ const Main = (): ReactElement => {
   }, [sortedList, tokenSymbol])
 
   const [selectedPairToken, setSelectedPairToken] = useState<{
-    history?: SortedTokenType['history']
     token: TokenType
     pairType: PairType
   }>()
