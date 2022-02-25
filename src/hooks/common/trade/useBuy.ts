@@ -27,7 +27,7 @@ import useSimulate from 'hooks/query/token/useSimulate'
 
 import { buyFromSimulator, buyToSimulator } from 'logics/tradeSimulator'
 import {
-  validateFeeTax,
+  validateFee,
   validateFormInputAmount,
   validateFormInputAmountDecimal,
   validateSlippage,
@@ -228,7 +228,7 @@ const useBuy = ({
           availableUusd = availableUusd.minus(UTIL.microfy(fromAmount))
         }
 
-        msg = validateFeeTax({
+        msg = validateFee({
           availableUusd: availableUusd.toFixed(0) as uUST,
           fee,
         })

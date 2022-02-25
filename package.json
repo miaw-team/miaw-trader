@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "@tabler/icons": "^1.41.2",
-    "@terra-money/terra.js": "^3.0.1",
-    "@terra-money/wallet-provider": "^3.1.1",
+    "@terra-money/terra.js": "^3.0.7",
+    "@terra-money/wallet-provider": "^3.8.0",
     "axios": "^0.21.3",
     "bignumber.js": "^9.0.1",
     "chart.js": "^3.5.1",

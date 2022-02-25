@@ -112,14 +112,12 @@ export const validateFormInputAmountDecimal = ({
   return ''
 }
 
-export const validateFeeTax = ({
+export const validateFee = ({
   availableUusd,
   fee,
-  tax,
 }: {
   availableUusd: uUST
   fee?: Fee
-  tax?: uUST
 }): string => {
   const ust = UTIL.toBn(availableUusd)
   const uusdFee =
@@ -128,12 +126,7 @@ export const validateFeeTax = ({
       ?.find((x) => x.denom === 'uusd')
       ?.amount.toString() || '0'
 
-  if (
-    ust
-      .minus(uusdFee)
-      .minus(tax || '0')
-      .isLessThanOrEqualTo(0)
-  ) {
+  if (ust.minus(uusdFee).isLessThanOrEqualTo(0)) {
     return MESSAGE['Insufficient fee']
   }
   return ''

@@ -48,7 +48,6 @@ const LpWithdrawForm = ({
     updateLpTokenAmount,
     lpTokenAmountErrMsg,
     fee,
-    tax,
     simulation,
   } = lpWithdrawReturn
 
@@ -59,22 +58,15 @@ const LpWithdrawForm = ({
   const feeData = useMemo(
     () =>
       fee
-        ? fee.amount
-            .map((f) => ({
-              title: 'Tx Fee',
-              value: (
-                <BalanceFormat
-                  value={f.amount.toString() as uToken}
-                  suffix={ASSET.symbolOfDenom[f.denom as TokenDenomEnum]}
-                />
-              ),
-            }))
-            .concat([
-              {
-                title: 'Tax',
-                value: <BalanceFormat value={tax} suffix={'UST'} />,
-              },
-            ])
+        ? fee.amount.map((f) => ({
+            title: 'Tx Fee',
+            value: (
+              <BalanceFormat
+                value={f.amount.toString() as uToken}
+                suffix={ASSET.symbolOfDenom[f.denom as TokenDenomEnum]}
+              />
+            ),
+          }))
         : [],
     [fee]
   )
@@ -154,7 +146,7 @@ const LpWithdrawForm = ({
       <StyledSection>
         <Hr type="dashed" />
       </StyledSection>
-      {fee && simulation && (
+      {(fee || simulation) && (
         <StyledSection>
           <FormDataList data={simulationData.concat(feeData)} />
         </StyledSection>

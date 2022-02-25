@@ -6,15 +6,7 @@ import { useRecoilValue } from 'recoil'
 
 import { UTIL } from 'consts'
 
-import {
-  Token,
-  LP,
-  uLP,
-  uUST,
-  PostTxStatus,
-  TokenDenomEnum,
-  ContractAddr,
-} from 'types'
+import { LP, uLP, PostTxStatus, TokenDenomEnum, ContractAddr } from 'types'
 
 import usePostTx from '../usePostTx'
 import postTxStore from 'store/postTxStore'
@@ -37,7 +29,6 @@ export type UseLpWithdrawReturn = {
   lpTokenAmountErrMsg: string
 
   fee?: Fee
-  tax: uUST
   simulation?: LpSimulation
 
   onClickLpWithdraw: () => void
@@ -77,7 +68,7 @@ const useLpWithdraw = ({
   const [simulation, setSimulation] = useState<LpSimulation>()
 
   const postTxResult = useRecoilValue(postTxStore.postTxResult)
-  const { postTx, getTax } = usePostTx()
+  const { postTx } = usePostTx()
 
   const walletAddress = connectedWallet?.walletAddress as string
 
@@ -114,7 +105,6 @@ const useLpWithdraw = ({
     isValid: !invalidForm,
     txOptions,
   })
-  const [tax, setTax] = useState<uUST>('0' as uUST)
 
   const submitErrMsg = useMemo(() => {
     if (fee) {
@@ -133,37 +123,20 @@ const useLpWithdraw = ({
   }, [fee, lpTokenAmount])
 
   const dbcSimulateLpTokenAmount = useDebouncedCallback(
-    async (nextUlpTokenAmount: uLP) => {
+    (nextUlpTokenAmount: uLP) => {
       if (poolInfo) {
-        const simulation = await LpLpSimulation({
+        const simulation = LpLpSimulation({
           poolInfo,
           ulp: nextUlpTokenAmount,
           userLpBalance: lpBal as uLP,
         })
         setSimulation(simulation)
-
-        let simulatedUusd
-
-        if (token_0_ContractOrDenom === TokenDenomEnum.uusd) {
-          simulatedUusd = UTIL.microfy(
-            simulation.token_0_Amount || ('0' as Token)
-          ) as uUST
-        } else if (token_1_ContractOrDenom === TokenDenomEnum.uusd) {
-          simulatedUusd = UTIL.microfy(
-            simulation.token_1_Amount || ('0' as Token)
-          ) as uUST
-        }
-
-        if (simulatedUusd) {
-          const _tax = await getTax({ uusd: simulatedUusd })
-          setTax(_tax.amount.toString() as uUST)
-        }
       }
     },
     400
   )
 
-  const updateLpTokenAmount = async (nextLpTokenAmount: LP): Promise<void> => {
+  const updateLpTokenAmount = (nextLpTokenAmount: LP): void => {
     setLpTokenAmount(nextLpTokenAmount.trim() as LP)
     const nextUlpTokenAmount = UTIL.microfy(nextLpTokenAmount) as uLP
     dbcSimulateLpTokenAmount(nextUlpTokenAmount)
@@ -198,7 +171,6 @@ const useLpWithdraw = ({
     lpTokenAmountErrMsg,
 
     fee,
-    tax,
     simulation,
     onClickLpWithdraw,
     invalidForm,

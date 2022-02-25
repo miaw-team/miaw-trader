@@ -1,4 +1,4 @@
-import { Coin, CreateTxOptions, Fee } from '@terra-money/terra.js'
+import { CreateTxOptions, Fee } from '@terra-money/terra.js'
 import {
   TxResult,
   useConnectedWallet,
@@ -6,12 +6,11 @@ import {
 } from '@terra-money/wallet-provider'
 
 import useLCD from 'hooks/query/useLCD'
-import { uUST, PostTxStatus } from 'types'
+import { PostTxStatus } from 'types'
 import { useSetRecoilState } from 'recoil'
 import postTxStore from 'store/postTxStore'
 
 export type UsePostTxReturn = {
-  getTax: (props: { uusd: uUST }) => Promise<Coin>
   getFee: (props: { txOptions: CreateTxOptions }) => Promise<Fee | undefined>
   postTx: (props: { txOptions: CreateTxOptions }) => Promise<void>
   resetPostTx: () => void
@@ -24,10 +23,6 @@ const usePostTx = (): UsePostTxReturn => {
   const { lcd } = useLCD()
 
   const setPostTxResult = useSetRecoilState(postTxStore.postTxResult)
-
-  const getTax = async ({ uusd }: { uusd: uUST }): Promise<Coin> => {
-    return lcd.utils.calculateTax(new Coin('uusd', uusd))
-  }
 
   const getFee = async ({
     txOptions,
@@ -64,7 +59,6 @@ const usePostTx = (): UsePostTxReturn => {
   }
 
   return {
-    getTax,
     getFee,
     postTx,
     resetPostTx,

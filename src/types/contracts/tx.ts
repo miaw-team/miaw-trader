@@ -6,7 +6,6 @@ export namespace tx {
     log:
       | string
       | {
-          tax: string
           // when failure
           code?: number
           message?: string

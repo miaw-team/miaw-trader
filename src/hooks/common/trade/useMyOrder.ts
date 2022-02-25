@@ -20,7 +20,7 @@ import useCalcFee from '../useCalcFee'
 import useFabricator from '../useFabricator'
 import useMyBalance from '../useMyBalance'
 
-import { validateFeeTax } from 'logics/validator'
+import { validateFee } from 'logics/validator'
 import useNetwork from '../useNetwork'
 import usePool from 'hooks/query/pair/usePool'
 import useOrders from 'hooks/query/limitOrder/useOrders'
@@ -140,7 +140,7 @@ const useMyOrder = ({
     if (fee) {
       let availableUusd = UTIL.toBn(uusdBal)
 
-      msg = validateFeeTax({
+      msg = validateFee({
         availableUusd: availableUusd.toFixed(0) as uUST,
         fee,
       })

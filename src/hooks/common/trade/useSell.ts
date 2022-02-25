@@ -27,7 +27,7 @@ import useSimulate from 'hooks/query/token/useSimulate'
 import { sellFromSimulator, sellToSimulator } from 'logics/tradeSimulator'
 import { useDebouncedCallback } from 'use-debounce/lib'
 import {
-  validateFeeTax,
+  validateFee,
   validateFormInputAmount,
   validateFormInputAmountDecimal,
   validateSlippage,
@@ -50,7 +50,6 @@ export type UseSellReturn = {
   toAmountErrMsg: string
 
   fee?: Fee
-  tax: uUST
   simulation?: TradeSimulation<uToken, uNative>
 
   onClickSell: () => void
@@ -90,7 +89,7 @@ const useSell = ({
   const [slippage, setSlippage] = useState<string>('0.01')
 
   const postTxResult = useRecoilValue(postTxStore.postTxResult)
-  const { postTx, getTax } = usePostTx()
+  const { postTx } = usePostTx()
 
   const walletAddress = connectedWallet?.walletAddress as string
 
@@ -140,7 +139,6 @@ const useSell = ({
     isValid: !invalidForm,
     txOptions,
   })
-  const [tax, setTax] = useState<uUST>('0' as uUST)
 
   const dbcSimulateFromAmount = useDebouncedCallback(
     async (nextFromUAmount: uToken) => {
@@ -159,14 +157,6 @@ const useSell = ({
           setSimulation(simulation)
           const _toAmount = simulation?.toAmount || ('0' as uNative)
           setToAmount(UTIL.demicrofy(_toAmount) as Native)
-          if (toTokenContractOrDenom === TokenDenomEnum.uusd) {
-            const _tax = await getTax({
-              uusd: _toAmount as uUST,
-            })
-            setTax(_tax.amount.toString() as uUST)
-          } else {
-            setTax('0' as uUST)
-          }
         }
       } catch (e) {
         setSimulationErrMsg(MESSAGE['Simulation failed'])
@@ -233,7 +223,7 @@ const useSell = ({
       if (fee) {
         const availableUusd = UTIL.toBn(uusdBal).toFixed(0) as uUST
 
-        msg = validateFeeTax({ availableUusd, fee, tax })
+        msg = validateFee({ availableUusd, fee })
       }
 
       const validateSlippageReturn = validateSlippage({
@@ -282,7 +272,6 @@ const useSell = ({
     toAmountErrMsg,
 
     fee,
-    tax,
     simulation,
     onClickSell,
     invalidForm,

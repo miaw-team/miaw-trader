@@ -45,7 +45,6 @@ const SellForm = ({
     updateToAmount,
     toAmountErrMsg,
     fee,
-    tax,
     simulation,
     slippage,
     updateSlippage,
@@ -62,22 +61,15 @@ const SellForm = ({
   const feeData = useMemo(
     () =>
       fee
-        ? fee.amount
-            .map((f) => ({
-              title: 'Tx Fee',
-              value: (
-                <BalanceFormat
-                  value={f.amount.toString() as uToken}
-                  suffix={ASSET.symbolOfDenom[f.denom as TokenDenomEnum]}
-                />
-              ),
-            }))
-            .concat([
-              {
-                title: 'Tax',
-                value: <BalanceFormat value={tax} suffix={'UST'} />,
-              },
-            ])
+        ? fee.amount.map((f) => ({
+            title: 'Tx Fee',
+            value: (
+              <BalanceFormat
+                value={f.amount.toString() as uToken}
+                suffix={ASSET.symbolOfDenom[f.denom as TokenDenomEnum]}
+              />
+            ),
+          }))
         : [],
     [fee]
   )

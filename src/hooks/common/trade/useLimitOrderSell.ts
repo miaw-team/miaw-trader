@@ -21,7 +21,7 @@ import useFabricator from '../useFabricator'
 import useMyBalance from '../useMyBalance'
 
 import {
-  validateFeeTax,
+  validateFee,
   validateFormInputAmount,
   validateFormInputMinAmount,
 } from 'logics/validator'
@@ -174,7 +174,7 @@ const useLimitOrderSell = ({
         availableUusd = availableUusd.minus(UTIL.microfy(askAmount))
       }
 
-      msg = validateFeeTax({
+      msg = validateFee({
         availableUusd: availableUusd.toFixed(0) as uUST,
         fee,
       })
