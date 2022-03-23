@@ -92,7 +92,7 @@ const InputMemo = ({
               <FormInput
                 inputProps={{
                   value: inputMemo,
-                  placeholder: '1.Input text. 2.Click Miaw!🐱',
+                  placeholder: '1.Input text. 2.Click Miawing!🐱',
                 }}
                 onChangeValue={setInputMemo}
               />

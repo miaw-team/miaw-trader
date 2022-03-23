@@ -51,6 +51,10 @@ import TLANDLogo from 'images/whitelist/TLAND.png'
 import ORNELogo from 'images/whitelist/ORNE.png'
 import PLYLogo from 'images/whitelist/PLY.png'
 import tSHIBALogo from 'images/whitelist/tSHIBA.png'
+import XTRALogo from 'images/whitelist/XTRA.png'
+import aUSTLogo from 'images/whitelist/aUST.png'
+import GLOWLogo from 'images/whitelist/GLOW.png'
+import ATLOLogo from 'images/whitelist/ATLO.svg'
 
 import {
   TokenKeyEnum,
@@ -61,6 +65,35 @@ import {
 } from 'types'
 
 const tokenInfo: Record<TokenKeyEnum, TokenInfoType> = {
+  [TokenKeyEnum.ATLO]: {
+    symbol: 'ATLO',
+    name: 'ATLO Token',
+    logo: ATLOLogo,
+    contractOrDenom:
+      'terra1cl7whtrqmz5ldr553q69qahck8xvk80fm33qjx' as ContractAddr,
+  },
+  [TokenKeyEnum.GLOW]: {
+    symbol: 'GLOW',
+    name: 'GLOW Token',
+    logo: GLOWLogo,
+    contractOrDenom:
+      'terra13zx49nk8wjavedjzu8xkk95r3t0ta43c9ptul7' as ContractAddr,
+  },
+  [TokenKeyEnum.XTRA]: {
+    symbol: 'XTRA',
+    name: 'XTRA Token',
+    logo: XTRALogo,
+    contractOrDenom:
+      'terra1kvjscdgwuvwc6uzm4rqfjl6nlmuhj28tequlnc' as ContractAddr,
+  },
+  [TokenKeyEnum.aUST]: {
+    symbol: 'aUST',
+    name: 'aUST Token',
+    logo: aUSTLogo,
+    contractOrDenom:
+      'terra1hzh9vpxhsk8253se0vv5jj6etdvxu3nv8z07zu' as ContractAddr,
+    group: TokenInfoGoupEnum.anc,
+  },
   [TokenKeyEnum.MIAW]: {
     symbol: 'MIAW',
     name: 'MIAW Token',
@@ -1021,6 +1054,50 @@ const mainnetTokenList: TokenType[] = [
       },
     ],
   },
+  {
+    ...tokenInfo[TokenKeyEnum.XTRA],
+    pairList: [
+      {
+        dex: DexEnum.terraswap,
+        base: TokenKeyEnum.UST,
+        pair: 'terra1uvchkwq4kv0vhy23c78hyy72zks2hqtpctklh2' as ContractAddr,
+        lp: 'terra1pndz6cy4t42qae4m7avkjjyu6vlcrlrx3hep0k' as ContractAddr,
+      },
+    ],
+  },
+  {
+    ...tokenInfo[TokenKeyEnum.aUST],
+    pairList: [
+      {
+        dex: DexEnum.terraswap,
+        base: TokenKeyEnum.UST,
+        pair: 'terra1z50zu7j39s2dls8k9xqyxc89305up0w7f7ec3n' as ContractAddr,
+        lp: 'terra1umup8qvslkayek0af8u7x2r3r5ndhk2fwhdxz5' as ContractAddr,
+      },
+    ],
+  },
+  {
+    ...tokenInfo[TokenKeyEnum.GLOW],
+    pairList: [
+      {
+        dex: DexEnum.terraswap,
+        base: TokenKeyEnum.UST,
+        pair: 'terra1p44kn7l233p7gcj0v3mzury8k7cwf4zt6gsxs5' as ContractAddr,
+        lp: 'terra1khm4az2cjlzl76885x2n7re48l9ygckjuye0mt' as ContractAddr,
+      },
+    ],
+  },
+  {
+    ...tokenInfo[TokenKeyEnum.ATLO],
+    pairList: [
+      {
+        dex: DexEnum.terraswap,
+        base: TokenKeyEnum.UST,
+        pair: 'terra1ycp5lnn0qu4sq4wq7k63zax9f05852xt9nu3yc' as ContractAddr,
+        lp: 'terra1l0wqwge0vtfmukx028pluxsr7ee2vk8gl5mlxr' as ContractAddr,
+      },
+    ],
+  },
 ]
 
 const testnetTokenList: TokenType[] = [
@@ -1057,7 +1134,7 @@ const mainnetLpOfLpList: LpofLpType[] = [
     token_0_LogoList: [LUNALogo, bLUNALogo],
     token_0_Contract:
       'terra1nuy34nwnsh53ygpc4xprlj263cztw7vc99leh2' as ContractAddr,
-    token_0_Symbol: 'Luna-bLuna Lp',
+    token_0_Symbol: 'Luna-bLuna Lp Of Terraswap',
     token_0_Pair:
       'terra1jxazgm67et0ce260kvrpfv50acuushpjsz2y0p' as ContractAddr,
     token_0_Combined: [
@@ -1071,7 +1148,7 @@ const mainnetLpOfLpList: LpofLpType[] = [
     token_1_Pair:
       'terra1tndcaqxkpc5ce9qee5ggqf430mr2z3pefe5wj6' as ContractAddr,
     token_1_Combined: [TokenDenomEnum.uluna, TokenDenomEnum.uusd],
-    token_1_Symbol: 'Luna-UST Lp',
+    token_1_Symbol: 'Luna-UST Lp Of Terraswap',
     token_1_ProvideSymbol: 'Luna',
     lpOfLp_LpTicker: 'LUNAHODL',
     lpOfLp_Lp: 'terra1qxlp0q3z20llu0gz9c7urzw7rmlnchm23yk8xc' as ContractAddr,

@@ -2,6 +2,8 @@ import { ReactElement, useEffect, useState, useCallback } from 'react'
 import styled from 'styled-components'
 import _ from 'lodash'
 
+import terraswap from 'images/terraswap.svg'
+
 import { COLOR, STYLE, UTIL } from 'consts'
 import {
   LpofLpType,
@@ -38,7 +40,8 @@ const StyledItem = styled(Card)<{ selected: boolean }>`
       selected ? COLOR.primary._400 : COLOR.gray._300};
 `
 
-const StyledItemTiker = styled(View)`
+const StyledItemTiker = styled(Row)`
+  align-items: center;
   position: absolute;
   top: -10px;
   left: 20px;
@@ -198,6 +201,7 @@ const LpOfLpItem = ({
   return (
     <StyledItem selected={selected} onClick={onClickItem}>
       <StyledItemTiker>
+        <FormImage src={terraswap} size={20} style={{ marginRight: 4 }} />
         <FormText
           fontType="B16"
           color={COLOR.primary._400}

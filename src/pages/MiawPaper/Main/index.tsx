@@ -8,7 +8,7 @@ import { toast } from 'react-toastify'
 import { STYLE, WHITELIST, COLOR } from 'consts'
 
 import { View, Card, FormText, LinkA } from 'components'
-import { IconSquare, IconSquareCheck, IconSquarePlus } from '@tabler/icons'
+import { IconSquare, IconSquareCheck } from '@tabler/icons'
 
 const StyledContainer = styled(View)`
   ${STYLE.setMediaWidth()}
@@ -82,7 +82,7 @@ const Main = (): ReactElement => {
             {'- 15% LP Staking reward. 5years, 5M>4M>3M>2M>1M'}
           </StyledDesc>
           <StyledDesc>{'- 11% Community funds'}</StyledDesc>
-          <StyledDesc>{'- 4% Lp Supply'}</StyledDesc>
+          <StyledDesc>{'- 3% Lp Supply'}</StyledDesc>
           <StyledDesc>{'- 1% Team'}</StyledDesc>
           <StyledDesc>{'- 70% burned'}</StyledDesc>
         </StyledSection>
@@ -103,10 +103,7 @@ const Main = (): ReactElement => {
             chart
           </StyledDesc>
           <StyledDesc>
-            <IconSquarePlus color={COLOR.success} /> Miawaifu NFT
-          </StyledDesc>
-          <StyledDesc>
-            <IconSquarePlus color={COLOR.success} /> NFT Trader
+            <IconSquareCheck color={COLOR.primary._600} /> Limit order
           </StyledDesc>
           <StyledDesc>
             <IconSquare color={COLOR.gray._900} /> Any interesting ideas
@@ -115,23 +112,14 @@ const Main = (): ReactElement => {
 
         <StyledSection>
           <StyledSubTitle fontType="B24">Keeping token prices</StyledSubTitle>
-          <StyledDesc fontType="B18">1. SayMiaw</StyledDesc>
+          <StyledDesc fontType="B18">1. Say Miaw</StyledDesc>
           <StyledDesc>
             {'-> Burn MIAW through SayMiaw with various events'}
           </StyledDesc>
-          <StyledDesc fontType="B18">2. Miawaifu NFT</StyledDesc>
-          <StyledDesc>{'-> Supply lp with Miawaifu sales proceeds'}</StyledDesc>
-          <StyledDesc fontType="B18">3. NFT Trader</StyledDesc>
-          <StyledDesc>{'-> Burn MIAW to upload nft'}</StyledDesc>
-          <StyledDesc>{'-> Supply lp with nft trading fee'}</StyledDesc>
-        </StyledSection>
-
-        <StyledSection>
-          <StyledSubTitle fontType="B24">MIAW V2?</StyledSubTitle>
+          <StyledDesc fontType="B18">2. Limit order</StyledDesc>
           <StyledDesc>
-            - Supporting token swap independently without the Terraswap
+            {'-> Token will be used for the limit order fee '}
           </StyledDesc>
-          <StyledDesc>- who knows?</StyledDesc>
         </StyledSection>
 
         <StyledSection>

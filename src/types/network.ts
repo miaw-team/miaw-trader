@@ -2,6 +2,10 @@ import { TokenDenomEnum } from 'types'
 import { ContractAddr } from './contracts'
 
 export enum TokenKeyEnum {
+  ATLO = 'ATLO',
+  GLOW = 'GLOW',
+  aUST = 'aUST',
+  XTRA = 'XTRA',
   MIAW = 'MIAW',
   UST = 'UST',
   Luna = 'Luna',
